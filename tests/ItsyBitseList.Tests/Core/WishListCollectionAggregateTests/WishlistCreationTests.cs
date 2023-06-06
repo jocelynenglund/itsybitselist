@@ -1,4 +1,5 @@
-﻿using ItsyBitseList.Core.WishlistCollectionAggregate;
+﻿using FluentAssertions;
+using ItsyBitseList.Core.WishlistCollectionAggregate;
 
 namespace ItsyBitseList.Tests.Core.WishListCollectionAggregateTests
 {
@@ -25,15 +26,16 @@ namespace ItsyBitseList.Tests.Core.WishListCollectionAggregateTests
         {
             // arrange
             const string Name = "My Wishlist";
-            const string Item = "My Item";
+            const string ItemDescription = "My Item";
+            var Item = new WishlistItem(ItemDescription);
 
             // act
             var wishlist = Wishlist.CreateWith(name: Name);
-            wishlist.AddItem(Item);
+            wishlist.AddItem(ItemDescription);
 
             // assert
-            Assert.Equal(Name, wishlist.Name);
-            Assert.Contains(Item, wishlist.Items);
+           wishlist.Name.Should().Be(Name);
+            wishlist.Items.Should().Contain(item => item.Description == Item.Description);
         }
     }
 }

@@ -16,29 +16,20 @@ namespace ItsyBitseList.IntegrationTests
 
 
         [Fact]
-        public async Task CreateWishlistCollection_RetrievesCollectionWithEmptyList()
-        {
-            var expectedOwnerName = "Me";
-            var client = new ApiClient("https://localhost:7137/", new HttpClient());
-            await client.CreateWishlistCollectionAsync(expectedOwnerName);
-            var result = await client.GetWishlistCollectionAsync(expectedOwnerName);
-            result.Should().BeAssignableTo<IEnumerable<WishlistListViewModel>>();
-            result.Count.Should().Be(0);
-
-        }
-
-        [Fact]
-        public async Task CreateWishlist_ShouldCreateNewWishlistAndAddToCollection()
+        public async Task CreateWishlistCollection_RetrievesCollectionWithListOfOne()
         {
             var expectTitle = "My Wishlist";
             var expectedOwner = "Me";
-            var client = new ApiClient("https://localhost:7137/", new HttpClient());
-            await client.CreateWishlistCollectionAsync(expectedOwner);
-            await client.CreateWishlistAsync(expectedOwner, expectTitle);
-            var result = await client.GetWishlistCollectionAsync(expectedOwner);
+            var httpClient = new HttpClient();
+            //httpClient.DefaultRequestHeaders.Add("owner", expectedOwner);
+            var client = new ApiClient("https://localhost:7137/", httpClient);
 
-            result.Count.Should().BeGreaterThan(1);
-            
+            await client.WishlistCollectionAsync(expectedOwner, new WishlistCollectionCreationRequest() { WishlistName = expectedOwner });
+
+            var result = await client.WishlistCollectionAllAsync(expectedOwner);
+            result.Count.Should().BeGreaterThanOrEqualTo(1);
+
         }
+
     }
 }

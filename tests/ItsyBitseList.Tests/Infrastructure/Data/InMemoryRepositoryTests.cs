@@ -9,7 +9,7 @@ namespace ItsyBitseList.Tests.Infrastructure.Data
         public void WishlistCollection_ListShouldBeInitializedOnCreation()
         {
             // Arrange
-            var repository = new InMemoryRepository();
+            var repository = new InMemoryRepository(seeded:false);
 
             // Act
             var result = repository.WishlistCollections;

@@ -44,19 +44,17 @@
         }
       }
     },
-    "/WishlistCollection/{owner}": {
+    "/WishlistCollection": {
       "get": {
         "tags": [
           "WishlistCollection"
         ],
         "summary": "Gets a list of wishlists owned by the user",
-        "operationId": "GetWishlistCollection",
         "parameters": [
           {
             "name": "owner",
-            "in": "path",
+            "in": "header",
             "description": "",
-            "required": true,
             "schema": {
               "type": "string"
             }
@@ -98,6 +96,48 @@
         "tags": [
           "WishlistCollection"
         ],
+        "summary": "Creates a new WishlistCollection owned by the user",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "header",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WishlistCollectionCreationRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WishlistCollectionCreationRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WishlistCollectionCreationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/WishlistCollection/{owner}/wishlist": {
+      "post": {
+        "tags": [
+          "WishlistCollection"
+        ],
         "summary": "Creates a new Wishlist owned by the user",
         "operationId": "CreateWishlist",
         "parameters": [
@@ -112,21 +152,20 @@
           }
         ],
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/WishlistCreationRequest"
               }
             },
             "text/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/WishlistCreationRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/WishlistCreationRequest"
               }
             }
           }
@@ -138,36 +177,54 @@
         }
       }
     },
-    "/WishlistCollection": {
-      "post": {
+    "/WishlistCollection/{owner}/wishlist/{id}": {
+      "get": {
         "tags": [
           "WishlistCollection"
         ],
-        "summary": "Creates a new WishlistCollection owned by the user",
-        "operationId": "CreateWishlistCollection",
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
+        "summary": "Retrieves a specific wishlist owned by the user",
+        "operationId": "GetWishlist",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WishlistDetailsViewModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WishlistDetailsViewModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WishlistDetailsViewModel"
+                }
+              }
+            }
           }
         }
       }
@@ -175,6 +232,23 @@
   },
   "components": {
     "schemas": {
+      "Item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "",
+            "format": "uuid"
+          },
+          "details": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Item details in a wishlist"
+      },
       "WeatherForecast": {
         "type": "object",
         "properties": {
@@ -198,23 +272,70 @@
         },
         "additionalProperties": false
       },
+      "WishlistCollectionCreationRequest": {
+        "type": "object",
+        "properties": {
+          "wishlistName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request model for wishlist collection creation"
+      },
+      "WishlistCreationRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request model for wishlist creation"
+      },
+      "WishlistDetailsViewModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the wishlist e.g. 'Christmas list' or 'Birthday list'",
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            },
+            "description": "List of items in the wishlist",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Detail view of wishlist"
+      },
       "WishlistListViewModel": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "Guid to uniquely identify wishlist collection",
             "format": "uuid"
           },
           "title": {
             "type": "string",
+            "description": "Title",
             "nullable": true
           },
           "numberOfItems": {
             "type": "integer",
+            "description": "Number of items in the wishlist",
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Summary of a wishlist collection"
       }
     }
   }
