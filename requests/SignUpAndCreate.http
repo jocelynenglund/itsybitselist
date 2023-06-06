@@ -17,7 +17,7 @@ POST {{host}}/WishlistCollection/{{ownerName}}/wishlist
 Content-Type: application/json
 
 {
-    "name": "My Wishlist"
+    "name": "My first wishlist"
 }
 
 ### Get Collection for owner
@@ -28,5 +28,4 @@ GET {{host}}/WishlistCollection/{{ownerName}}
 @wishlistId = {{GetWishlists.response.body.$[0].id}}
 
 ### Get Wishlist
-GET {{host}}/WishlistCollection/{{ownerName}}/wishlist/29ffae41-13c2-4189-b7cb-563e83743f7a
-
+GET {{host}}/WishlistCollection/{{ownerName}}/wishlist/{{wishlistId}}
