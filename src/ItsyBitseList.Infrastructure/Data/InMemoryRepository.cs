@@ -8,10 +8,10 @@ namespace ItsyBitseList.Infrastructure.Data
     {
         List<WishlistCollection> wishlistCollections;
         public IEnumerable<WishlistCollection> WishlistCollections => wishlistCollections;
-        public InMemoryRepository()
+        public InMemoryRepository(bool seeded = true)
         {
             wishlistCollections = new List<WishlistCollection>();
-            SeedData();
+            if (seeded) SeedData();
         }
 
         private void SeedData()
@@ -32,10 +32,14 @@ namespace ItsyBitseList.Infrastructure.Data
             return WishlistCollections.First(collection => collection.Owner == owner);
         }
 
-        public void CreateWishlistCollection(string owner)
+        public void CreateWishlistCollection(string owner, string wishlistName)
         {
             if (!wishlistCollections.Any(item => item.Owner == owner))
-                wishlistCollections.Add(new WishlistCollection(owner));
+            {
+                var collection = new WishlistCollection(owner);
+                collection.CreateNewWishlist(wishlistName);
+                wishlistCollections.Add(collection);
+            }
         }
     }
 }

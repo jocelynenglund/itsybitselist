@@ -7,12 +7,12 @@
         {
             Id = Guid.NewGuid();
             Name = name;
-            items = new List<string>();
+            items = new List<WishlistItem>();
         }
         public Guid Id { get; set; }
         public string Name { get; }
-        private List<string> items;
-        public IReadOnlyCollection<string> Items => items.AsReadOnly();
+        private List<WishlistItem> items;
+        public IReadOnlyCollection<WishlistItem> Items => items.AsReadOnly();
 
         public static Wishlist CreateWith(string name)
         {
@@ -22,7 +22,17 @@
         // a method to add items to the wishlist
         public void AddItem(string item)
         {
-            items.Add(item);
+            items.Add(new WishlistItem(item));
         }
+    }
+    public record WishlistItem
+    {
+        public Guid Id { get; } = Guid.NewGuid();
+        public string Description { get; }
+        public WishlistItem(string description)
+        {
+            Description = description;
+        }
+
     }
 }
