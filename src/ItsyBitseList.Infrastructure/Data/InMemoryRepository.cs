@@ -1,5 +1,6 @@
 ﻿using ItsyBitseList.Core.Interfaces;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
+using System.ComponentModel;
 
 namespace ItsyBitseList.Infrastructure.Data
 {
@@ -10,7 +11,22 @@ namespace ItsyBitseList.Infrastructure.Data
         public InMemoryRepository()
         {
             wishlistCollections = new List<WishlistCollection>();
+            SeedData();
         }
+
+        private void SeedData()
+        {
+            var me  = new WishlistCollection("me");
+            
+            me.CreateNewWishlist("Birthday Wishlist");
+            me.CreateNewWishlist("Christmas Wishlist");
+            wishlistCollections.Add(me);
+            me.Wishlists[0].AddItem("Bio kort");
+            me.Wishlists[0].AddItem("Barbie Doll");
+            me.Wishlists[1].AddItem("Robux");
+            me.Wishlists[1].AddItem("Christmas dress");
+        }
+
         public WishlistCollection GetWishlistCollectionByOwner(string owner)
         {
             return WishlistCollections.First(collection => collection.Owner == owner);

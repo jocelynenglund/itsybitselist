@@ -19,6 +19,13 @@ builder.Services.AddSwaggerGen(c=>
     var xmlFullPath = Path.Combine(AppContext.BaseDirectory, xmlPath);
     c.IncludeXmlComments(xmlFullPath);
 });
+// Add services to the container.
+builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+{
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader();
+}));
 
 builder.Services.AddInfrastructureDependencies();
 
@@ -30,6 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
