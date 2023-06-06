@@ -28,17 +28,17 @@ namespace ItsyBitseList.Tests.Api.Controllers
                 .Returns(wishlistCollection);
             
             // Act
-            var result = _sut.Get("Celyn");
+            var response = _sut.Get("Celyn");
             // Assert
-            result.Should().NotBeNull();
-            result.Should().BeAssignableTo<IEnumerable<WishlistListViewModel>>();
-            result.Count().Should().Be(1);
+            response.Should().NotBeNull();
+            response.Result.Should().BeAssignableTo<IEnumerable<WishlistListViewModel>>();
+            response.Value.Count().Should().Be(1);
         }
 
         [Fact]
-        public void Post_ShouldCreateANewWishlistCollection()
+        public void CreateWishlistCollection_ShouldCreateANewWishlistCollection()
         {
-            _sut.Post("Celyn");
+            _sut.Post(new WishlistCollectionCreationRequest("Celyn"));
 
             _repositoryMock.Verify(x => x.CreateWishlistCollection(It.IsAny<string>()), Times.Once);
         }

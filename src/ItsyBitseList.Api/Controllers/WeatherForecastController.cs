@@ -19,7 +19,7 @@ namespace ItsyBitseList.Api.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public ActionResult<IEnumerable<WeatherForecast>> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

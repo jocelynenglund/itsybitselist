@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "ItsyBitseList.Api",
-    "version": "1.0"
+    "version": "v1"
   },
   "paths": {
     "/WeatherForecast": {
@@ -49,11 +49,13 @@
         "tags": [
           "WishlistCollection"
         ],
+        "summary": "Gets a list of wishlists owned by the user",
         "operationId": "GetWishlistCollection",
         "parameters": [
           {
             "name": "owner",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -91,6 +93,49 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "WishlistCollection"
+        ],
+        "summary": "Creates a new Wishlist owned by the user",
+        "operationId": "CreateWishlist",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
       }
     },
     "/WishlistCollection": {
@@ -98,8 +143,10 @@
         "tags": [
           "WishlistCollection"
         ],
+        "summary": "Creates a new WishlistCollection owned by the user",
         "operationId": "CreateWishlistCollection",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -154,6 +201,10 @@
       "WishlistListViewModel": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
           "title": {
             "type": "string",
             "nullable": true

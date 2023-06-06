@@ -5,10 +5,11 @@
     {
         private Wishlist(string name)
         {
+            Id = Guid.NewGuid();
             Name = name;
             items = new List<string>();
         }
-
+        public Guid Id { get; set; }
         public string Name { get; }
         private List<string> items;
         public IReadOnlyCollection<string> Items => items.AsReadOnly();

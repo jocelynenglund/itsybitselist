@@ -15,5 +15,6 @@
         {
             Wishlists.Add(Wishlist.CreateWith(Title));
         }
+
     }
 }
