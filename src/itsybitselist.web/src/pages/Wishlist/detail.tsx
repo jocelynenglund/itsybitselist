@@ -17,16 +17,19 @@ export const Detail = () => {
   });
 
   const { id, owner } = useParams<{ id: string; owner: string }>();
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const headers = new Headers();
     headers.append("owner", owner!);
-    fetch(`https://localhost:7137/wishlist/${id}`, {
+    fetch(`${apiUrl}/wishlist/${id}`, {
       headers: headers,
     })
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json();
+      })
       .then((data) => setWishlist(data));
-  }, []);
+  }, [id]);
   return (
     <div>
       <h1>{owner}'s Wishlist</h1>
