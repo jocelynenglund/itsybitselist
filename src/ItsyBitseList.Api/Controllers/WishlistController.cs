@@ -25,6 +25,14 @@ namespace ItsyBitseList.Api.Controllers
         {
             var id = Guid.NewGuid();
             var wishlistCollection = _wishlistCollectionRepository.GetWishlistCollectionByOwner(owner);
+            if (wishlistCollection == null)
+            {
+                var collectionId = Guid.NewGuid();
+                _wishlistCollectionRepository.CreateWishlistCollection(owner, collectionId, request.Name);
+                wishlistCollection = _wishlistCollectionRepository.GetWishlistCollectionByOwner(owner);
+            }
+            else
+
             wishlistCollection.CreateNewWishlist(id, request.Name);
             return CreatedAtRoute("GetWishlist", new { id }, null);
         }
@@ -43,7 +51,7 @@ namespace ItsyBitseList.Api.Controllers
             {
                 var wishlistCollection = _wishlistCollectionRepository.GetWishlistCollectionByOwner(owner);
                 var result = wishlistCollection.Wishlists.First(x => x.Id == id);
-                return Ok(new WishlistDetails(result.Name, result.Items.Select(item => new Item(item.Id, item.Description)).ToList()));
+                return Ok(new WishlistDetails(result.Name, result.Items.Select(item => new Item(item.Id, item.State, item.Description)).ToList()));
             }
             catch (InvalidOperationException)
             {
@@ -52,7 +60,7 @@ namespace ItsyBitseList.Api.Controllers
         }
 
         [HttpPost("/wishlist/{id}/item", Name = "AddItemToWishlist")]
-        public IActionResult Post([FromHeader] string owner, [FromRoute] Guid id, [FromBody] ItemCretionRequest item )
+        public IActionResult Post([FromHeader] string owner, [FromRoute] Guid id, [FromBody] ItemCretionRequest item)
         {
             var itemId = Guid.NewGuid();
             var wishlistCollection = _wishlistCollectionRepository.GetWishlistCollectionByOwner(owner);
@@ -71,7 +79,16 @@ namespace ItsyBitseList.Api.Controllers
             var wishlistCollection = _wishlistCollectionRepository.GetWishlistCollectionByOwner(owner);
             var wishlist = wishlistCollection.Wishlists.First(x => x.Id == id);
             var item = wishlist.Items.First(x => x.Id == itemId);
-            return Ok(new Item(item.Id, item.Description));
+            return Ok(new Item(item.Id, item.State, item.Description));
+        }
+
+        [HttpPatch("/wishlist/{id}/item/{itemId}", Name = "PromiseItemInWishlist")]
+        public void Patch([FromHeader] string owner, [FromRoute] Guid id, [FromRoute] Guid itemId)
+        {
+            var wishlistCollection = _wishlistCollectionRepository.GetWishlistCollectionByOwner(owner);
+            var wishlist = wishlistCollection.Wishlists.First(x => x.Id == id);
+            var item = wishlist.Items.First(x => x.Id == itemId);
+            item.Promised();
         }
     }
 }

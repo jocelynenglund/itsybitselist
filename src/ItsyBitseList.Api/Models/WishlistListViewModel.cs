@@ -1,4 +1,6 @@
-﻿namespace ItsyBitseList.Api.Models
+﻿using ItsyBitseList.Core.WishlistCollectionAggregate;
+
+namespace ItsyBitseList.Api.Models
 {
     /// <summary>
     /// Summary of a wishlist collection
@@ -20,8 +22,8 @@
     /// </summary>
     /// <param name="Id"></param>
     /// <param name="Details"></param>
-    public record Item(Guid Id, string Details);
-
+    public record Item(Guid Id, State State, string Details);
+    
     /// <summary>
     /// Request model for wishlist collection creation
     /// </summary>

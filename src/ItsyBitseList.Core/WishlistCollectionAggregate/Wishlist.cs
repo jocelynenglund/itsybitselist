@@ -29,11 +29,28 @@
     {
         public Guid Id { get; } 
         public string Description { get; }
+        public State State { get; private set; }
         public WishlistItem(Guid id, string description)
         {
             Id = id;
             Description = description;
+            State = State.Wished;
+        }
+        public void Promised()
+        {
+            State = State.Promised;
+        }
+        public void Verified()
+        {
+            State = State.Verified;
         }
 
+    }
+
+    public enum State
+    {
+        Wished = 1,
+        Promised = 2,
+        Verified = 3,
     }
 }

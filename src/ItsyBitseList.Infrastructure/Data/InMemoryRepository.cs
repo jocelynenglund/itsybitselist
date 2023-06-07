@@ -27,9 +27,9 @@ namespace ItsyBitseList.Infrastructure.Data
             me.Wishlists[1].AddItem(Guid.NewGuid(), "Christmas dress");
         }
 
-        public WishlistCollection GetWishlistCollectionByOwner(string owner)
+        public WishlistCollection? GetWishlistCollectionByOwner(string owner)
         {
-            return WishlistCollections.First(collection => collection.Owner == owner);
+            return WishlistCollections.FirstOrDefault(collection => collection.Owner == owner);
         }
 
         public void CreateWishlistCollection(string owner, Guid id, string wishlistName)

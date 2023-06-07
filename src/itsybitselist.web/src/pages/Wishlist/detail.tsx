@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 interface IItem {
   id: string;
   details: string;
+  state: "Wished" | "Promised" | "Verified";
 }
 interface IWishlistDetailView {
   name: string;
@@ -61,6 +62,18 @@ export const Detail = () => {
       .then((data) => setWishlist(data));
   };
 
+  const promiseItem = (itemId: string) => {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("owner", owner!);
+    fetch(`${apiUrl}/wishlist/${id}/item/${itemId}`, {
+      method: "PATCH",
+      headers: headers,
+    }).then((data) => {
+      fetchWishlistDetails();
+    });
+  };
+
   return (
     <div>
       <h1>{owner}'s Wishlist</h1>
@@ -69,7 +82,16 @@ export const Detail = () => {
       )}
       <ul>
         {wishlist.items.map((item, idx) => (
-          <li key={item.id}>{item.details}</li>
+          <li key={item.id}>
+            {item.details}{" "}
+            {item.state === "Wished" ? (
+              <a href="#" onClick={() => promiseItem(item.id)}>
+                Promise
+              </a>
+            ) : (
+              <div>{item.state}</div>
+            )}
+          </li>
         ))}
       </ul>
       <form onSubmit={handleSubmit(onSubmit)}>

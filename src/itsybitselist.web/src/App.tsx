@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Wishlist } from "./pages/Wishlist";
 import { Detail } from "./pages/Wishlist/detail";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
