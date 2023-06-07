@@ -11,9 +11,9 @@
             Owner = owner;
         }
 
-        public void CreateNewWishlist(string Title)
+        public void CreateNewWishlist(Guid id, string Title)
         {
-            Wishlists.Add(Wishlist.CreateWith(Title));
+            Wishlists.Add(Wishlist.CreateWith(id, Title));
         }
 
     }

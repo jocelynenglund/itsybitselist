@@ -4,21 +4,29 @@
 ### Create Wishlist Collection
 POST {{host}}/WishlistCollection
 Content-Type: application/json
-
+owner: "booboo"
 {
-    "owner": "me"
+    "WishlistName": "booboo's list"
 }
 
 ### Get Collection for owner
-GET {{host}}/WishlistCollection/{{ownerName}}
+GET {{host}}/WishlistCollection
+owner: {{ownerName}}
 
 ### Create Wishlist
-POST {{host}}/WishlistCollection/{{ownerName}}/wishlist
+# @name CreateWishlist
+POST {{host}}/wishlist
+owner: {{ownerName}}
 Content-Type: application/json
 
 {
     "name": "My first wishlist"
 }
+###
+@location = {{CreateWishlist.response.headers.Location}}
+### Retrieve Wishlist
+Get {{location}}
+owner: {{ownerName}}
 
 ### Get Collection for owner
 # @name GetWishlists

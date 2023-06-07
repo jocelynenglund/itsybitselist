@@ -33,4 +33,6 @@
     /// </summary>
     /// <param name="Name"></param>
     public record WishlistCreationRequest(string Name);
+
+    public record ItemCretionRequest(string Details);
 }

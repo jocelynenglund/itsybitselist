@@ -29,7 +29,7 @@ namespace ItsyBitseList.Tests.Core.WishListCollectionAggregateTests
             var wishlistCollection = new WishlistCollection("Celyn");
 
             //Act
-            wishlistCollection.CreateNewWishlist("My Wishlist");
+            wishlistCollection.CreateNewWishlist(Guid.NewGuid(), "My Wishlist");
 
             //Assert
             wishlistCollection.Wishlists.Should().HaveCount(1);

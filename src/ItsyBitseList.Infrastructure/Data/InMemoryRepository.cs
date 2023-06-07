@@ -16,15 +16,15 @@ namespace ItsyBitseList.Infrastructure.Data
 
         private void SeedData()
         {
-            var me  = new WishlistCollection("me");
-            
-            me.CreateNewWishlist("Birthday Wishlist");
-            me.CreateNewWishlist("Christmas Wishlist");
+            var me = new WishlistCollection("me");
+
+            me.CreateNewWishlist(Guid.NewGuid(), "Birthday Wishlist");
+            me.CreateNewWishlist(Guid.NewGuid(), "Christmas Wishlist");
             wishlistCollections.Add(me);
-            me.Wishlists[0].AddItem("Bio kort");
-            me.Wishlists[0].AddItem("Barbie Doll");
-            me.Wishlists[1].AddItem("Robux");
-            me.Wishlists[1].AddItem("Christmas dress");
+            me.Wishlists[0].AddItem(Guid.NewGuid(), "Bio kort");
+            me.Wishlists[0].AddItem(Guid.NewGuid(), "Barbie Doll");
+            me.Wishlists[1].AddItem(Guid.NewGuid(), "Robux");
+            me.Wishlists[1].AddItem(Guid.NewGuid(), "Christmas dress");
         }
 
         public WishlistCollection GetWishlistCollectionByOwner(string owner)
@@ -32,12 +32,12 @@ namespace ItsyBitseList.Infrastructure.Data
             return WishlistCollections.First(collection => collection.Owner == owner);
         }
 
-        public void CreateWishlistCollection(string owner, string wishlistName)
+        public void CreateWishlistCollection(string owner, Guid id, string wishlistName)
         {
             if (!wishlistCollections.Any(item => item.Owner == owner))
             {
                 var collection = new WishlistCollection(owner);
-                collection.CreateNewWishlist(wishlistName);
+                collection.CreateNewWishlist(id, wishlistName);
                 wishlistCollections.Add(collection);
             }
         }

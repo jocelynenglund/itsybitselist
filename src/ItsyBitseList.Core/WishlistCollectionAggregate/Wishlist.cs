@@ -3,9 +3,9 @@
     // create a Wishlist class according to the tests
     public class Wishlist
     {
-        private Wishlist(string name)
+        private Wishlist(Guid id, string name)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Name = name;
             items = new List<WishlistItem>();
         }
@@ -14,23 +14,24 @@
         private List<WishlistItem> items;
         public IReadOnlyCollection<WishlistItem> Items => items.AsReadOnly();
 
-        public static Wishlist CreateWith(string name)
+        public static Wishlist CreateWith(Guid id, string name)
         {
-            return new Wishlist(name);
+            return new Wishlist(id, name);
 
         }
         // a method to add items to the wishlist
-        public void AddItem(string item)
+        public void AddItem(Guid id, string item)
         {
-            items.Add(new WishlistItem(item));
+            items.Add(new WishlistItem(id, item));
         }
     }
     public record WishlistItem
     {
-        public Guid Id { get; } = Guid.NewGuid();
+        public Guid Id { get; } 
         public string Description { get; }
-        public WishlistItem(string description)
+        public WishlistItem(Guid id, string description)
         {
+            Id = id;
             Description = description;
         }
 

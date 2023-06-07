@@ -13,7 +13,7 @@ namespace ItsyBitseList.Tests.Core.WishListCollectionAggregateTests
             const string Name = "My Wishlist";
 
             // act
-            var wishlist = Wishlist.CreateWith(name: Name);
+            var wishlist = Wishlist.CreateWith(Guid.NewGuid(), name: Name);
 
             // assert
             Assert.Equal(Name, wishlist.Name);
@@ -27,14 +27,14 @@ namespace ItsyBitseList.Tests.Core.WishListCollectionAggregateTests
             // arrange
             const string Name = "My Wishlist";
             const string ItemDescription = "My Item";
-            var Item = new WishlistItem(ItemDescription);
+            var Item = new WishlistItem(Guid.NewGuid(),ItemDescription);
 
             // act
-            var wishlist = Wishlist.CreateWith(name: Name);
-            wishlist.AddItem(ItemDescription);
+            var wishlist = Wishlist.CreateWith(Guid.NewGuid(), name: Name);
+            wishlist.AddItem(Guid.NewGuid(), ItemDescription);
 
             // assert
-           wishlist.Name.Should().Be(Name);
+            wishlist.Name.Should().Be(Name);
             wishlist.Items.Should().Contain(item => item.Description == Item.Description);
         }
     }
