@@ -8,7 +8,7 @@ namespace ItsyBitseList.Infrastructure
     {
         public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services)
         {
-            services.AddSingleton<IWishlistCollectionRepository, InMemoryRepository>();
+            services.AddSingleton<IWishlistRepository, InMemoryRepository>();
             return services;
         }
 

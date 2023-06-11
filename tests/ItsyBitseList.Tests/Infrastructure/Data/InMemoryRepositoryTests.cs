@@ -12,7 +12,7 @@ namespace ItsyBitseList.Tests.Infrastructure.Data
             var repository = new InMemoryRepository(seeded:false);
 
             // Act
-            var result = repository.WishlistCollections;
+            var result = repository.Wishhlists;
 
             // Assert
             Assert.NotNull(result);

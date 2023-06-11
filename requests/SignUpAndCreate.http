@@ -10,14 +10,9 @@ owner: "booboo"
     "WishlistName": "booboo's list"
 }
 
-### Get Collection for owner
-GET {{host}}/WishlistCollection
-owner: {{ownerName}}
-
 ### Create Wishlist
 # @name CreateWishlist
 POST {{host}}/wishlist
-owner: {{ownerName}}
 Content-Type: application/json
 
 {

@@ -4,42 +4,42 @@ using System.ComponentModel;
 
 namespace ItsyBitseList.Infrastructure.Data
 {
-    public class InMemoryRepository : IWishlistCollectionRepository
+    public class InMemoryRepository : IWishlistRepository
     {
-        List<WishlistCollection> wishlistCollections;
-        public IEnumerable<WishlistCollection> WishlistCollections => wishlistCollections;
+        List<Wishlist> wishlists;
+        public IEnumerable<Wishlist> Wishhlists => wishlists;
         public InMemoryRepository(bool seeded = true)
         {
-            wishlistCollections = new List<WishlistCollection>();
+            wishlists = new List<Wishlist>();
             if (seeded) SeedData();
         }
 
         private void SeedData()
         {
-            var me = new WishlistCollection("me");
-
-            me.CreateNewWishlist(Guid.NewGuid(), "Birthday Wishlist");
-            me.CreateNewWishlist(Guid.NewGuid(), "Christmas Wishlist");
-            wishlistCollections.Add(me);
-            me.Wishlists[0].AddItem(Guid.NewGuid(), "Bio kort");
-            me.Wishlists[0].AddItem(Guid.NewGuid(), "Barbie Doll");
-            me.Wishlists[1].AddItem(Guid.NewGuid(), "Robux");
-            me.Wishlists[1].AddItem(Guid.NewGuid(), "Christmas dress");
+            var one = Guid.NewGuid();
+            var two = Guid.NewGuid();
+            CreateWishlist("me", one, "Birthday Wishlist");
+            CreateWishlist("me", two, "Christmas Wishlist");
+            wishlists.First(x=>x.Id==one).AddItem(Guid.NewGuid(), "Bio kort");
+            wishlists.First(x => x.Id == one).AddItem(Guid.NewGuid(), "Barbie Doll");
+            wishlists.First(x => x.Id == two).AddItem(Guid.NewGuid(), "Robux");
+            wishlists.First(x => x.Id == two).AddItem(Guid.NewGuid(), "Christmas dress");
         }
 
-        public WishlistCollection? GetWishlistCollectionByOwner(string owner)
+      
+        public void CreateWishlist(string owner, Guid id, string wishlistName)
         {
-            return WishlistCollections.FirstOrDefault(collection => collection.Owner == owner);
+            wishlists.Add(Wishlist.CreateWith(id, wishlistName, owner));
         }
 
-        public void CreateWishlistCollection(string owner, Guid id, string wishlistName)
+        IEnumerable<Wishlist> IWishlistRepository.GetWishlistCollectionByOwner(string? owner)
         {
-            if (!wishlistCollections.Any(item => item.Owner == owner))
-            {
-                var collection = new WishlistCollection(owner);
-                collection.CreateNewWishlist(id, wishlistName);
-                wishlistCollections.Add(collection);
-            }
+            return wishlists.Where(item => owner!=null? item.Owner == owner: true).ToList();
         }
+
+        public Wishlist GetWishlist(Guid id)
+        {
+            return wishlists.First(item => item.Id == id);
+        }   
     }
 }
