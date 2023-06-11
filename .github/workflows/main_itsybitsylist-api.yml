@@ -23,10 +23,10 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release ${{env.DOTNET_ROOT}}/src/ItsyBitseList.Api/ItsyBitseList.Api.csproj
+        run: dotnet build --configuration Release ~/src/ItsyBitseList.Api/ItsyBitseList.Api.csproj
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/src/ItsyBitseList.Api/ItsyBitseList.Api.csproj
+        run: dotnet publish -c Release -o  ~/src/ItsyBitseList.Api/ItsyBitseList.Api.csproj
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
