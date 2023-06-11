@@ -1,17 +1,8 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Form, useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import "./detail.css";
-import {
-  Navbar,
-  Button,
-  Modal,
-  InputGroup,
-  FormControl,
-  Nav,
-  Alert,
-} from "react-bootstrap";
-import { faPlus, faShare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { Navbar, Button, Nav, Alert } from "react-bootstrap";
+import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
 
@@ -24,9 +15,7 @@ interface IWishlistDetailView {
   name: string;
   items: IItem[];
 }
-interface IFormInput {
-  details: string;
-}
+
 export const PublicDetail = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
@@ -35,13 +24,9 @@ export const PublicDetail = () => {
   });
 
   const { id } = useParams<{ id: string }>();
-  const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  useEffect(() => {
-    fetchWishlistDetails();
-  }, [id]);
 
-  const fetchWishlistDetails = () => {
+  const fetchWishlistDetails = useCallback(() => {
     const headers = new Headers();
     fetch(`${apiUrl}/wishlist/${id}`, {
       headers: headers,
@@ -50,7 +35,11 @@ export const PublicDetail = () => {
         return response.json();
       })
       .then((data) => setWishlist(data));
-  };
+  }, [id, apiUrl]);
+
+  useEffect(() => {
+    fetchWishlistDetails();
+  }, [fetchWishlistDetails]);
 
   const promiseItem = (itemId: string) => {
     const headers = new Headers();

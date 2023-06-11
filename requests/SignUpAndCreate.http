@@ -1,14 +1,8 @@
-@host = https://localhost:7137
+@local=https://localhost:7137
+@remote=https://itsybitsylist-api.azurewebsites.net
+@host = {{remote}}
+
 @ownerName = me
-
-### Create Wishlist Collection
-POST {{host}}/WishlistCollection
-Content-Type: application/json
-owner: "booboo"
-
-{
-    "WishlistName": "booboo's list"
-}
 
 ### Create Wishlist
 # @name CreateWishlist

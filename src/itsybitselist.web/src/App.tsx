@@ -1,11 +1,5 @@
-import React from "react";
 import "./App.css";
-import {
-  Route,
-  createBrowserRouter,
-  Routes,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Detail } from "./pages/Wishlist/detail";
 import "bootstrap/dist/css/bootstrap.min.css";

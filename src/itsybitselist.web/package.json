@@ -51,6 +51,7 @@
   "devDependencies": {
     "eslint-config-react-app": "^7.0.1",
     "jest-editor-support": "^31.0.1",
-    "sass": "^1.63.3"
+    "sass": "^1.63.3",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
   }
 }

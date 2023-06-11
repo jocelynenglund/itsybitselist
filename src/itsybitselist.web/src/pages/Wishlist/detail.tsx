@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form, useParams } from "react-router-dom";
 import "./detail.css";
@@ -11,7 +11,7 @@ import {
   Nav,
   Alert,
 } from "react-bootstrap";
-import { faPlus, faShare, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
 
@@ -38,9 +38,21 @@ export const Detail = () => {
   const { register, handleSubmit, reset } = useForm<IFormInput>();
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+
+  const fetchWishlistDetails = useCallback(() => {
+    const headers = new Headers();
+    fetch(`${apiUrl}/wishlist/${id}`, {
+      headers: headers,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => setWishlist(data));
+  }, [id, apiUrl]);
+
   useEffect(() => {
     fetchWishlistDetails();
-  }, [id]);
+  }, [fetchWishlistDetails]);
 
   const onSubmit = (data: IFormInput) => {
     const headers = new Headers();
@@ -59,17 +71,6 @@ export const Detail = () => {
         fetchWishlistDetails();
         setShowModal(false);
       });
-  };
-
-  const fetchWishlistDetails = () => {
-    const headers = new Headers();
-    fetch(`${apiUrl}/wishlist/${id}`, {
-      headers: headers,
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => setWishlist(data));
   };
 
   const deleteItem = (itemId: string) => {
