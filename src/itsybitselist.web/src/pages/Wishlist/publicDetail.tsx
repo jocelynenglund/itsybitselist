@@ -92,7 +92,7 @@ export const PublicDetail = () => {
         </Navbar>
       </div>
       {wishlist.items.length === 0 && (
-        <h2>Your list is empty! Let's add somithng</h2>
+        <h2>The list is still empty, check again later!</h2>
       )}
       {wishlist.items.map((item, idx) => (
         <Item key={idx} item={item} callback={promiseItem} action="promise" />

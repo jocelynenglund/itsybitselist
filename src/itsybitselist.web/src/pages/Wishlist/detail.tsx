@@ -132,7 +132,7 @@ export const Detail = () => {
         </Navbar>
       </div>
       {wishlist.items.length === 0 && (
-        <h2>Your list is empty! Let's add somithng</h2>
+        <h2>Your list is empty! Let's add something</h2>
       )}
       {wishlist.items.map((item, idx) => (
         <Item key={idx} item={item} action="delete" callback={deleteItem} />
