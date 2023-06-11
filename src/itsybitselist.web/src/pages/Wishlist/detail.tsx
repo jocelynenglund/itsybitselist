@@ -14,6 +14,7 @@ import {
 import { faPlus, faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
+import { apiUrl } from "../../Constants";
 
 interface IItem {
   id: string;
@@ -28,7 +29,6 @@ interface IFormInput {
   details: string;
 }
 export const Detail = () => {
-  const apiUrl = process.env.REACT_APP_API_URL;
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
     name: "",
     items: [],
@@ -48,7 +48,7 @@ export const Detail = () => {
         return response.json();
       })
       .then((data) => setWishlist(data));
-  }, [id, apiUrl]);
+  }, [id]);
 
   useEffect(() => {
     fetchWishlistDetails();

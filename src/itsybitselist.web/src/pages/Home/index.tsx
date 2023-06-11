@@ -2,11 +2,11 @@ import { useForm } from "react-hook-form";
 import { Form, Button, Container } from "react-bootstrap";
 import styles from "./index.module.css";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../../Constants";
 
 interface IFormInput {
   wishlistName: string;
 }
-const apiUrl = process.env.REACT_APP_API_URL;
 
 export const Home = () => {
   let navigate = useNavigate();

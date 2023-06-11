@@ -5,6 +5,7 @@ import { Navbar, Button, Nav, Alert } from "react-bootstrap";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
+import { apiUrl } from "../../Constants";
 
 interface IItem {
   id: string;
@@ -17,7 +18,6 @@ interface IWishlistDetailView {
 }
 
 export const PublicDetail = () => {
-  const apiUrl = process.env.REACT_APP_API_URL;
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
     name: "",
     items: [],
@@ -35,7 +35,7 @@ export const PublicDetail = () => {
         return response.json();
       })
       .then((data) => setWishlist(data));
-  }, [id, apiUrl]);
+  }, [id]);
 
   useEffect(() => {
     fetchWishlistDetails();
