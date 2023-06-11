@@ -1,9 +1,10 @@
-x 2023-06-07 (A) create wishlist page +itsybitsylist
 (B) update controller to mediatr +itsybitsylist
-(A) rethink domain model +itsybitsylist
-x (A) 2023-06-07 add and display item state +itsybitsylist
 (A) flesh out user stories +itsybitsylist
-(A) add owner view that allow adding and deleting of items +itsybitsylist
 (A) add visitor view that allows promising items +itsybitsylist
 (A) implement proper persistence +itsybitsylist
-x 2023-06-07 update create endpoints to return location pri:A +itsybitsylist 
+
+x (A) 2023-06-07 add and display item state +itsybitsylist
+x (A) add owner view that allow adding and deleting of items +itsybitsylist
+x (A) rethink domain model +itsybitsylist
+x 2023-06-07 (A) create wishlist page +itsybitsylist
+x 2023-06-07 update create endpoints to return location pri:A +itsybitsylist

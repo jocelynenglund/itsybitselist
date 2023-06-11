@@ -92,7 +92,7 @@ namespace ItsyBitseList.Api.Controllers
         }
 
         [HttpPatch("/wishlist/{id}/item/{itemId}", Name = "PromiseItemInWishlist")]
-        public void Patch([FromHeader] string owner, [FromRoute] Guid id, [FromRoute] Guid itemId)
+        public void Patch([FromRoute] Guid id, [FromRoute] Guid itemId)
         {
             var wishlist = _wishlistCollectionRepository.GetWishlist(id);
             var item = wishlist.Items.First(x => x.Id == itemId);

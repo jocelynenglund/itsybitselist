@@ -27,39 +27,19 @@ interface IWishlistDetailView {
 interface IFormInput {
   details: string;
 }
-export const Detail = () => {
+export const PublicDetail = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
     name: "",
     items: [],
   });
 
-  const { id, owner } = useParams<{ id: string; owner: string }>();
-  const { register, handleSubmit, reset } = useForm<IFormInput>();
+  const { id } = useParams<{ id: string }>();
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
     fetchWishlistDetails();
   }, [id]);
-
-  const onSubmit = (data: IFormInput) => {
-    const headers = new Headers();
-    headers.append("owner", owner!);
-    headers.append("Content-Type", "application/json");
-    const body = JSON.stringify({ details: data.details });
-
-    fetch(`${apiUrl}/wishlist/${id}/item`, {
-      method: "POST",
-      headers: headers,
-      body: body,
-    })
-      .then((response) => {})
-      .then((data) => {
-        reset();
-        fetchWishlistDetails();
-        setShowModal(false);
-      });
-  };
 
   const fetchWishlistDetails = () => {
     const headers = new Headers();
@@ -72,12 +52,11 @@ export const Detail = () => {
       .then((data) => setWishlist(data));
   };
 
-  const deleteItem = (itemId: string) => {
+  const promiseItem = (itemId: string) => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
-    headers.append("owner", owner!);
     fetch(`${apiUrl}/wishlist/${id}/item/${itemId}`, {
-      method: "DELETE",
+      method: "PATCH",
       headers: headers,
     }).then((data) => {
       fetchWishlistDetails();
@@ -108,13 +87,6 @@ export const Detail = () => {
           <Navbar.Brand href="#" className="navbar-title">
             {wishlist.name}
           </Navbar.Brand>
-          <Button
-            variant="outline-light"
-            className="addButton"
-            onClick={() => setShowModal(true)}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </Button>
           <Navbar.Toggle aria-controls="navbar-nav" />
           <Navbar.Collapse id="navbar-nav">
             <Nav className="me-auto"></Nav>
@@ -134,27 +106,8 @@ export const Detail = () => {
         <h2>Your list is empty! Let's add somithng</h2>
       )}
       {wishlist.items.map((item, idx) => (
-        <Item key={idx} item={item} action="delete" callback={deleteItem} />
+        <Item key={idx} item={item} callback={promiseItem} action="promise" />
       ))}
-
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Item</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <InputGroup>
-              <FormControl {...register("details")} />
-              <Button type="submit" variant="primary">
-                Add Item
-              </Button>
-              <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Close
-              </Button>
-            </InputGroup>
-          </Form>
-        </Modal.Body>
-      </Modal>
     </div>
   );
 };

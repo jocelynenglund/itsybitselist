@@ -7,9 +7,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Home } from "./pages/Home";
-import { Wishlist } from "./pages/Wishlist";
 import { Detail } from "./pages/Wishlist/detail";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { PublicDetail } from "./pages/Wishlist/publicDetail";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/wishlist/:id",
     element: <Detail />,
+  },
+  {
+    path: "/wishlist/public/:id",
+    element: <PublicDetail />,
   },
 ]);
 function App() {
