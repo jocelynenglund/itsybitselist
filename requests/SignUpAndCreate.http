@@ -1,0 +1,37 @@
+@host = https://localhost:7137
+@ownerName = me
+
+### Create Wishlist Collection
+POST {{host}}/WishlistCollection
+Content-Type: application/json
+owner: "booboo"
+
+{
+    "WishlistName": "booboo's list"
+}
+
+### Create Wishlist
+# @name CreateWishlist
+POST {{host}}/wishlist
+Content-Type: application/json
+
+{
+    "name": "My first wishlist"
+}
+###
+@location = {{CreateWishlist.response.headers.Location}}
+### Retrieve Wishlist
+Get {{location}}
+owner: {{ownerName}}
+
+### Get Collection for owner
+# @name GetWishlists
+GET {{host}}/WishlistCollection/
+owner: {{ownerName}}
+
+### Set WishlistId
+@wishlistId = {{GetWishlists.response.body.$[0].id}}
+
+### Get Wishlist
+GET {{host}}/wishlist/{{wishlistId}}
+owner: {{ownerName}}

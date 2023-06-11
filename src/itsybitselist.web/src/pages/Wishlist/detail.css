@@ -1,0 +1,43 @@
+.custom-navbar {
+  height: 100px;
+  background-color: pink;
+  color: white;
+}
+
+.container {
+  height: 100vh;
+  max-width: 500px;
+}
+.navbar-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+}
+
+.addButton {
+  padding: 1px 10px;
+  margin-left: 10px;
+}
+
+.shareButton {
+  padding: 1px 10px;
+  margin-right: 10px;
+}
+.shareAlert {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 1rem;
+  z-index: 9999;
+}
+
+.shareAlert.fade {
+  opacity: 0;
+  transition: opacity 0.15s linear;
+}
+
+.shareAlert.show {
+  opacity: 1;
+  transition: opacity 0.15s linear;
+}

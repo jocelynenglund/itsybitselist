@@ -1,0 +1,33 @@
+.item-container {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-container:hover,
+.item-container:focus,
+.item-container:active {
+  background-color: #f1f1f1;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.delete-button,
+.promise-button {
+  visibility: hidden;
+}
+
+.item-container:hover .delete-button,
+.item-container:focus .delete-button,
+.item-container:active .delete-button {
+  visibility: visible;
+}
+
+.item-container:hover .promise-button,
+.item-container:focus .promise-button,
+.item-container:active .promise-button {
+  visibility: visible;
+}
