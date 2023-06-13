@@ -8,3 +8,7 @@ x (A) add owner view that allow adding and deleting of items +itsybitsylist
 x (A) rethink domain model +itsybitsylist
 x 2023-06-07 (A) create wishlist page +itsybitsylist
 x 2023-06-07 update create endpoints to return location pri:A +itsybitsylist
+
+- mocking persistenc - make an instance, add singleton interface with the same instance
+- using mediator can take out crap from controller and consolidate it in the Core project
+- no automapper because of record use, but it has perks.

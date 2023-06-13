@@ -6,7 +6,7 @@ import "./item.css";
 type ItemProps = {
   item: {
     id: string;
-    details: string;
+    description: string;
     state: string;
   };
   action: "delete" | "promise";
@@ -16,7 +16,7 @@ type ItemProps = {
 export const Item = ({ item, action, callback }: ItemProps) => {
   return (
     <div className="item-container">
-      <div className="item-details">{item.details}</div>
+      <div className="item-details">{item.description}</div>
       {item.state !== "Promised" ? (
         action === "delete" ? (
           <Button

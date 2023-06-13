@@ -9,9 +9,9 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist
     public record GetWishlistQuery(Guid Id): IRequest<WishListDetails>;
     public class GetWishlistHandler : IRequestHandler<GetWishlistQuery, WishListDetails>
     {
-        private readonly IWishlistRepository _wishlistRepository;
+        private readonly IAsyncRepository<Wishlist> _wishlistRepository;
 
-        public GetWishlistHandler(IWishlistRepository wishlistRepository)
+        public GetWishlistHandler(IAsyncRepository<Wishlist> wishlistRepository)
         {
             _wishlistRepository = wishlistRepository;
         }

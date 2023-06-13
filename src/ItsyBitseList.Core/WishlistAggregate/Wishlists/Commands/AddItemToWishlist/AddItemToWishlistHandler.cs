@@ -18,7 +18,7 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishl
         public async Task<Guid> Handle(AddItemToWishlistCommand request, CancellationToken cancellationToken)
         {
             var wishlistItem = WishlistItem.CreateWith(request);
-            await _wishlistItemRepository.AddAsync(wishlistItem);
+            wishlistItem =  await _wishlistItemRepository.AddAsync(wishlistItem);
             return wishlistItem.Id;
         }
     }

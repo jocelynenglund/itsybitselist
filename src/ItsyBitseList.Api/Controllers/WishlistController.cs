@@ -1,5 +1,4 @@
 ﻿using ItsyBitseList.Api.Models;
-using ItsyBitseList.Core.Interfaces;
 using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
 using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
 using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemInWishlist;
@@ -16,13 +15,11 @@ namespace ItsyBitseList.Api.Controllers
     [Route("[controller]")]
     public class WishlistController : ControllerBase
     {
-        private IWishlistRepositoryLegacy _wishlistCollectionRepository { get; }
         private readonly IMediator _mediator;
 
-        public WishlistController(IWishlistRepositoryLegacy wishlistCollectionRepository, IMediator mediator)
+        public WishlistController(IMediator mediator)
         {
             _mediator = mediator;
-            _wishlistCollectionRepository = wishlistCollectionRepository;
         }
 
 

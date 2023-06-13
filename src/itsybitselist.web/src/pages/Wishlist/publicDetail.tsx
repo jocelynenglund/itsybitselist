@@ -9,7 +9,7 @@ import { apiUrl } from "../../Constants";
 
 interface IItem {
   id: string;
-  details: string;
+  description: string;
   state: "Wished" | "Promised" | "Verified";
 }
 interface IWishlistDetailView {
