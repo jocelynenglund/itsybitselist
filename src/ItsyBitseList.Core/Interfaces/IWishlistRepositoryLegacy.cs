@@ -2,7 +2,7 @@
 
 namespace ItsyBitseList.Core.Interfaces
 {
-    public interface IWishlistRepository
+    public interface IWishlistRepositoryLegacy
     {
         void CreateWishlist(string owner, Guid id, string wishlistName);
         IEnumerable<Wishlist> GetWishlistCollectionByOwner(string owner);

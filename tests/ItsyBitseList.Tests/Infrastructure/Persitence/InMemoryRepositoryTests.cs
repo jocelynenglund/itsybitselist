@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using ItsyBitseList.Infrastructure.Data;
+using ItsyBitseList.Infrastructure.Persistence;
 
-namespace ItsyBitseList.Tests.Infrastructure.Data
+namespace ItsyBitseList.Tests.Infrastructure.Persitence
 {
     public class InMemoryRepositoryTests
     {
@@ -9,7 +9,7 @@ namespace ItsyBitseList.Tests.Infrastructure.Data
         public void WishlistCollection_ListShouldBeInitializedOnCreation()
         {
             // Arrange
-            var repository = new InMemoryRepository(seeded:false);
+            var repository = new InMemoryRepository(seeded: false);
 
             // Act
             var result = repository.Wishhlists;

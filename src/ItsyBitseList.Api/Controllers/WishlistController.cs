@@ -1,5 +1,13 @@
 ﻿using ItsyBitseList.Api.Models;
 using ItsyBitseList.Core.Interfaces;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemInWishlist;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInWishlist;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlists;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ItsyBitseList.Api.Controllers
@@ -8,22 +16,25 @@ namespace ItsyBitseList.Api.Controllers
     [Route("[controller]")]
     public class WishlistController : ControllerBase
     {
-        public WishlistController(IWishlistRepository wishlistCollectionRepository)
+        private IWishlistRepositoryLegacy _wishlistCollectionRepository { get; }
+        private readonly IMediator _mediator;
+
+        public WishlistController(IWishlistRepositoryLegacy wishlistCollectionRepository, IMediator mediator)
         {
+            _mediator = mediator;
             _wishlistCollectionRepository = wishlistCollectionRepository;
         }
 
-        private IWishlistRepository _wishlistCollectionRepository { get; }
 
         [HttpGet("/wishlist", Name = "GetWishlists")]
         [ProducesResponseType(typeof(IEnumerable<WishlistOverview>), 200)]
-        public IActionResult Get([FromHeader] string? owner)
+        public async Task<IActionResult> Get([FromHeader] string? owner)
         {
             try
             {
 
-                var collection = _wishlistCollectionRepository.GetWishlistCollectionByOwner(owner);
-                var result = collection.Select(wishlist => new WishlistOverview(wishlist.Id, wishlist.Name, wishlist.Items.Count));
+                var result = await _mediator.Send(new GetWishlistsQuery(owner));
+                
                 return Ok(result);
             }
             catch (InvalidOperationException)
@@ -38,13 +49,10 @@ namespace ItsyBitseList.Api.Controllers
         /// <param name="owner"></param>
         /// <param name="wishlistName"></param>
         [HttpPost("/wishlist", Name = "CreateWishlist")]
-        public IActionResult CreateWishlist([FromHeader] string? owner, [FromBody] WishlistCreationRequest request)
+        public async Task<IActionResult> CreateWishlist([FromHeader] string? owner, [FromBody] WishlistCreationRequest request)
         {
-            var id = Guid.NewGuid();
-       
-            _wishlistCollectionRepository.CreateWishlist(owner, id, request.Name);
+            var id = await _mediator.Send(new CreateWishlistCommand(owner, request.Name));
         
-
             return CreatedAtRoute("GetWishlist", new { id }, null);
         }
 
@@ -55,14 +63,14 @@ namespace ItsyBitseList.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("/wishlist/{id}", Name = "GetWishlist")]
-        [ProducesResponseType(typeof(WishlistDetails), 200)]
-        public IActionResult GetWishlist([FromHeader] string? owner, [FromRoute] Guid id)
+        [ProducesResponseType(typeof(WishListDetails), 200)]
+        public async Task<IActionResult> GetWishlist([FromHeader] string? owner, [FromRoute] Guid id)
         {
             try
             {
-                var result = _wishlistCollectionRepository.GetWishlist(id);
+                var result = await _mediator.Send(new GetWishlistQuery(id));
               
-                return Ok(new WishlistDetails(result.Name, result.Items.Select(item => new Item(item.Id, item.State, item.Description)).ToList()));
+                return Ok(result);
             }
             catch (InvalidOperationException)
             {
@@ -71,11 +79,9 @@ namespace ItsyBitseList.Api.Controllers
         }
 
         [HttpPost("/wishlist/{id}/item", Name = "AddItemToWishlist")]
-        public IActionResult Post([FromHeader] string owner, [FromRoute] Guid id, [FromBody] ItemCretionRequest item)
+        public async Task<IActionResult> Post([FromHeader] string? owner, [FromRoute] Guid id, [FromBody] ItemCretionRequest item)
         {
-            var itemId = Guid.NewGuid();
-            var wishlist = _wishlistCollectionRepository.GetWishlist(id);
-            wishlist.AddItem(itemId, item.Details);
+            var itemId = (await _mediator.Send(new AddItemToWishlistCommand(id, item.Details)));
 
             return CreatedAtRoute("GetItemInWishlist", new { id, itemId }, null);
         }
@@ -84,26 +90,27 @@ namespace ItsyBitseList.Api.Controllers
         /// Gets a specific item in a wishlist
         /// </summary> 
         [HttpGet("/wishlist/{id}/item/{itemId}", Name = "GetItemInWishlist")]
-        public IActionResult GetItemInWishlist([FromHeader] string owner, [FromRoute] Guid id, [FromRoute] Guid itemId)
+        public async Task<IActionResult> GetItemInWishlist([FromHeader] string? owner, [FromRoute] Guid id, [FromRoute] Guid itemId)
         {
-            var wishlist = _wishlistCollectionRepository.GetWishlist(id);
-            var item = wishlist.Items.First(x => x.Id == itemId);
-            return Ok(new Item(item.Id, item.State, item.Description));
+            var item = await _mediator.Send(new GetItemInWishlistQuery(id, itemId));
+            
+            return Ok(item);
         }
 
         [HttpPatch("/wishlist/{id}/item/{itemId}", Name = "PromiseItemInWishlist")]
-        public void Patch([FromRoute] Guid id, [FromRoute] Guid itemId)
+        public async Task<IActionResult> Patch([FromRoute] Guid id, [FromRoute] Guid itemId)
         {
-            var wishlist = _wishlistCollectionRepository.GetWishlist(id);
-            var item = wishlist.Items.First(x => x.Id == itemId);
-            item.Promised();
+            await _mediator.Send(new PromiseItemInWishlistCommand(id, itemId));
+
+            return NoContent();
         }
 
         [HttpDelete("/wishlist/{id}/item/{itemId}", Name = "DeleteItemInWishlist")]
-        public void Delete([FromHeader] string owner, [FromRoute] Guid id, [FromRoute] Guid itemId)
+        public async Task<IActionResult> Delete([FromHeader] string owner, [FromRoute] Guid id, [FromRoute] Guid itemId)
         {
-            var wishlist = _wishlistCollectionRepository.GetWishlist(id);
-            wishlist.Remove(itemId);
+            await _mediator.Send(new DeleteItemInWishlistCommand(id, itemId));
+
+            return NoContent();
         }
     }
 }

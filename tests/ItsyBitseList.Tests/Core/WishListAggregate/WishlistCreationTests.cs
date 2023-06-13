@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 
-namespace ItsyBitseList.Tests.Core.WishListCollectionAggregateTests
+namespace ItsyBitseList.Tests.Core.WishListAggregate
 {
     public class WishlistCreationTests
     {
@@ -25,13 +25,15 @@ namespace ItsyBitseList.Tests.Core.WishListCollectionAggregateTests
         public void AddItemToWishlist()
         {
             // arrange
+            var wishlistId = Guid.NewGuid();
+            var itemId = Guid.NewGuid();
             const string Name = "My Wishlist";
             const string ItemDescription = "My Item";
-            var Item = new WishlistItem(Guid.NewGuid(),ItemDescription);
+            var Item = new WishlistItem(itemId, wishlistId, ItemDescription);
 
             // act
-            var wishlist = Wishlist.CreateWith(Guid.NewGuid(), name: Name);
-            wishlist.AddItem(Guid.NewGuid(), ItemDescription);
+            var wishlist = Wishlist.CreateWith(wishlistId,  name: Name);
+            wishlist.AddItem(itemId, ItemDescription);
 
             // assert
             wishlist.Name.Should().Be(Name);

@@ -1,4 +1,5 @@
 using ItsyBitseList.Infrastructure;
+using ItsyBitseList.Core;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -34,6 +35,7 @@ builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
 }));
 
 builder.Services.AddInfrastructureDependencies();
+builder.Services.AddCoreDependencies();
 
 var app = builder.Build();
 

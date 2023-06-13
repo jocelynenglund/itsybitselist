@@ -1,4 +1,7 @@
-﻿namespace ItsyBitseList.Core.WishlistCollectionAggregate
+﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
+
+namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
     // create a Wishlist class according to the tests
     public class Wishlist
@@ -7,13 +10,15 @@
         {
             Id = id;
             Name = name;
-            items = new List<WishlistItem>();
+            items = items ?? new List<WishlistItem>();
             Owner = owner;
         }
         public Guid Id { get; set; }
         public string Name { get; }
         public string Owner { get; set; }
         private List<WishlistItem> items;
+
+        public void SetItems(List<WishlistItem> items) => this.items = items;
         public IReadOnlyCollection<WishlistItem> Items => items.AsReadOnly();
 
         public static Wishlist CreateWith(Guid id, string name, string? owner = null)
@@ -22,42 +27,20 @@
         }
 
         // a method to add items to the wishlist
-        public void AddItem(Guid id, string item)
+        public Wishlist AddItem(Guid id, string item)
         {
-            items.Add(new WishlistItem(id, item));
+            items.Add(new WishlistItem(id, this.Id, item));
+            return this;
         }
 
         public void Remove(Guid id)
         {
             items.Remove(items.First(x => x.Id == id));
         }
-    }
-    public record WishlistItem
-    {
-        public Guid Id { get; }
-        public string Description { get; }
-        public State State { get; private set; }
-        public WishlistItem(Guid id, string description)
-        {
-            Id = id;
-            Description = description;
-            State = State.Wished;
-        }
-        public void Promised()
-        {
-            State = State.Promised;
-        }
-        public void Verified()
-        {
-            State = State.Verified;
-        }
 
-    }
-
-    public enum State
-    {
-        Wished = 1,
-        Promised = 2,
-        Verified = 3,
+        internal static Wishlist CreateWith(CreateWishlistCommand request)
+        {
+            return new Wishlist(Guid.NewGuid(), request.WishlistName, request.Owner);
+        }
     }
 }
