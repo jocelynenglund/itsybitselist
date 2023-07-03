@@ -3,7 +3,6 @@
 @host = {{remote}}
 
 @ownerName = me
-
 ### Create Wishlist
 # @name CreateWishlist
 POST {{host}}/wishlist
@@ -20,7 +19,7 @@ owner: {{ownerName}}
 
 ### Get Collection for owner
 # @name GetWishlists
-GET {{host}}/WishlistCollection/
+GET {{host}}/wishlist
 owner: {{ownerName}}
 
 ### Set WishlistId
