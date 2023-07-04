@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { request } from "http";
+import appenv from "../../appenv";
+
+const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IWishlistListView {
   id: number;
   title: string;
@@ -8,7 +9,6 @@ interface IWishlistListView {
 }
 export const Wishlist = () => {
   const [wishlists, setWishlists] = useState<IWishlistListView[]>([]);
-  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const headers = new Headers();
