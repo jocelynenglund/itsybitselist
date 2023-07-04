@@ -1,4 +1,5 @@
 ﻿using ItsyBitseList.Api.Models;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands;
 using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
 using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
 using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemInWishlist;
@@ -8,6 +9,7 @@ using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlists;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.RevertPromiseItemInWishlist;
 
 namespace ItsyBitseList.Api.Controllers
 {
@@ -31,7 +33,7 @@ namespace ItsyBitseList.Api.Controllers
             {
 
                 var result = await _mediator.Send(new GetWishlistsQuery(owner));
-                
+
                 return Ok(result);
             }
             catch (InvalidOperationException)
@@ -49,7 +51,7 @@ namespace ItsyBitseList.Api.Controllers
         public async Task<IActionResult> CreateWishlist([FromHeader] string? owner, [FromBody] WishlistCreationRequest request)
         {
             var id = await _mediator.Send(new CreateWishlistCommand(owner, request.Name));
-        
+
             return CreatedAtRoute("GetWishlist", new { id }, null);
         }
 
@@ -66,7 +68,7 @@ namespace ItsyBitseList.Api.Controllers
             try
             {
                 var result = await _mediator.Send(new GetWishlistQuery(id));
-              
+
                 return Ok(result);
             }
             catch (InvalidOperationException)
@@ -76,7 +78,7 @@ namespace ItsyBitseList.Api.Controllers
         }
 
         [HttpPost("/wishlist/{id}/item", Name = "AddItemToWishlist")]
-        public async Task<IActionResult> Post([FromHeader] string? owner, [FromRoute] Guid id, [FromBody] ItemCretionRequest item)
+        public async Task<IActionResult> Post([FromHeader] string? owner, [FromRoute] Guid id, [FromBody] ItemCreationRequest item)
         {
             var itemId = (await _mediator.Send(new AddItemToWishlistCommand(id, item.Details)));
 
@@ -90,14 +92,23 @@ namespace ItsyBitseList.Api.Controllers
         public async Task<IActionResult> GetItemInWishlist([FromHeader] string? owner, [FromRoute] Guid id, [FromRoute] Guid itemId)
         {
             var item = await _mediator.Send(new GetItemInWishlistQuery(id, itemId));
-            
+
             return Ok(item);
         }
 
         [HttpPatch("/wishlist/{id}/item/{itemId}", Name = "PromiseItemInWishlist")]
-        public async Task<IActionResult> Patch([FromRoute] Guid id, [FromRoute] Guid itemId)
+        public async Task<IActionResult> Patch([FromRoute] Guid id, [FromRoute] Guid itemId, [FromBody] PatchRequest request)
         {
-            await _mediator.Send(new PromiseItemInWishlistCommand(id, itemId));
+            if (request.State == "Promised")
+            {
+                var promised = await _mediator.Send(new PromiseItemInWishlistCommand(id, itemId));
+                return Ok(promised);
+            }
+            if (request.PromiseKey.HasValue)
+            {
+                await _mediator.Send(new RevertPromiseItemInWishlistCommand(id, itemId, request.PromiseKey.Value));
+                return Ok(request.PromiseKey.Value);
+            }
 
             return NoContent();
         }
