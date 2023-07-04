@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "src/ItsyBitseList.Api/**"
   workflow_dispatch:
 
 jobs:
@@ -19,12 +21,12 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: "6.0.x"
           include-prerelease: true
 
       - name: Build with dotnet
         working-directory: ./src/ItsyBitseList.Api
-        run: dotnet build --configuration Release 
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
         working-directory: ./src/ItsyBitseList.Api
@@ -40,7 +42,7 @@ jobs:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'Production'
+      name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -53,7 +55,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'itsybitsylist-api'
-          slot-name: 'Production'
+          app-name: "itsybitsylist-api"
+          slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CB2F56799371423BBCEC23A8F76BAB75 }}
           package: .
