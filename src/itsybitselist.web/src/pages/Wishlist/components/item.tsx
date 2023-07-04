@@ -1,4 +1,4 @@
-import { faCheck, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTrashAlt, faUndo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "react-bootstrap";
 import "./item.css";
@@ -9,11 +9,12 @@ type ItemProps = {
     description: string;
     state: string;
   };
+  promiseKey?: string | undefined;
   action: "delete" | "promise";
-  callback: (id: string) => void;
+  callback: (id: string, promiseKey?: string) => void;
 };
 
-export const Item = ({ item, action, callback }: ItemProps) => {
+export const Item = ({ item, action, promiseKey, callback }: ItemProps) => {
   return (
     <div className="item-container">
       <div className="item-details">{item.description}</div>
@@ -36,7 +37,18 @@ export const Item = ({ item, action, callback }: ItemProps) => {
           </Button>
         )
       ) : (
-        <div>{item.state}</div>
+        <div>
+          {promiseKey && (
+            <Button
+              variant="primary"
+              onClick={() => callback(item.id, promiseKey)}
+              className="promise-button"
+            >
+              <FontAwesomeIcon icon={faUndo} />
+            </Button>
+          )}
+          {item.state}
+        </div>
       )}
     </div>
   );

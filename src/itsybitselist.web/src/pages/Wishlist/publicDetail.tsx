@@ -17,7 +17,10 @@ interface IWishlistDetailView {
   name: string;
   items: IItem[];
 }
-
+interface PromiseKeys {
+  [key: string]: string;
+}
+const promiseDictionary: PromiseKeys = {};
 export const PublicDetail = () => {
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
     name: "",
@@ -42,15 +45,25 @@ export const PublicDetail = () => {
     fetchWishlistDetails();
   }, [fetchWishlistDetails]);
 
-  const promiseItem = (itemId: string) => {
+  const promiseItem = (itemId: string, promiseKey?: string) => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
+    const body = promiseKey
+      ? JSON.stringify({ promiseKey: promiseKey, state: "Wished" })
+      : JSON.stringify({ state: "Promised" });
+
     fetch(`${apiUrl}/wishlist/${id}/item/${itemId}`, {
       method: "PATCH",
       headers: headers,
-    }).then((data) => {
-      fetchWishlistDetails();
-    });
+      body: body,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        promiseDictionary[itemId] = data;
+        fetchWishlistDetails();
+      });
   };
 
   const handleShare = () => {
@@ -95,9 +108,19 @@ export const PublicDetail = () => {
       {wishlist.items.length === 0 && (
         <h2>The list is still empty, check again later!</h2>
       )}
-      {wishlist.items.map((item, idx) => (
-        <Item key={idx} item={item} callback={promiseItem} action="promise" />
-      ))}
+      {wishlist.items.map((item, idx) => {
+        console.log(promiseDictionary[item.id], "key is");
+
+        return (
+          <Item
+            key={idx}
+            item={item}
+            callback={promiseItem}
+            promiseKey={promiseDictionary[item.id]}
+            action="promise"
+          />
+        );
+      })}
     </div>
   );
 };

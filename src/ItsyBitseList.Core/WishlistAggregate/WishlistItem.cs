@@ -8,6 +8,9 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
         public string Description { get; }
         public State State { get; private set; }
         public Guid WishlistId { get; set; }
+
+        private Guid _promiseGuid;
+        
         public WishlistItem(Guid id, Guid wishlistId, string description)
         {
             Id = id;
@@ -15,9 +18,11 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             State = State.Wished;
             WishlistId = wishlistId;
         }
-        public void Promised()
+        public Guid Promised()
         {
             State = State.Promised;
+            _promiseGuid = Guid.NewGuid();
+            return _promiseGuid;
         }
         public void Verified()
         {
@@ -27,6 +32,17 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
         internal static WishlistItem CreateWith(AddItemToWishlistCommand request)
         {
             return new WishlistItem(Guid.NewGuid(), request.WishlistId, request.ItemDetails);
+        }
+
+        public void Revert(Guid id)
+        {
+            if (_promiseGuid == id)
+            {
+                State = State.Wished;
+            } else
+            {
+                throw new InvalidOperationException("Cannot revert promise with mismatched id");
+            }
         }
     }
 }
