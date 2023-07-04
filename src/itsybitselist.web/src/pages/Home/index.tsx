@@ -2,8 +2,10 @@ import { useForm } from "react-hook-form";
 import { Form, Button, Container } from "react-bootstrap";
 import styles from "./index.module.css";
 import { useNavigate } from "react-router-dom";
-import { apiUrl } from "../../Constants";
+import headerImage from "../../assets/appheader.png";
+import appenv from "../../appenv";
 
+const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IFormInput {
   wishlistName: string;
 }
@@ -33,6 +35,7 @@ export const Home = () => {
   };
   return (
     <Container className={styles.container}>
+      <img src={headerImage} alt="Wishlist" className={styles.headerImage} />
       <h1 className={styles.title}>Create a New Wishlist</h1>
       <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <Form.Group
@@ -42,7 +45,7 @@ export const Home = () => {
           <Form.Label className={styles.label}>Wishlist Name</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter wishlist name"
+            placeholder="e.g. My Birthday Wishlist"
             {...register("wishlistName", { required: true })}
             className={styles.input}
           />

@@ -6,3 +6,9 @@
 .formGroup {
   padding-bottom: 20px;
 }
+
+.headerImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}

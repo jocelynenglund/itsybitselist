@@ -5,8 +5,9 @@ import { Navbar, Button, Nav, Alert } from "react-bootstrap";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
-import { apiUrl } from "../../Constants";
+import appenv from "../../appenv";
 
+const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IItem {
   id: string;
   description: string;
