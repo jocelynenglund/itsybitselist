@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -25,7 +24,7 @@ builder.Services.AddSwaggerGen(c=>
     var xmlFullPath = Path.Combine(AppContext.BaseDirectory, xmlPath);
     c.IncludeXmlComments(xmlFullPath);
 });
-// Add services to the container.
+// Setup cors
 builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
 {
     builder.AllowAnyOrigin()
@@ -54,3 +53,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+/// <summary>
+/// Program class
+/// </summary>
+public partial class Program { }

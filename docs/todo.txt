@@ -1,6 +1,6 @@
-(B) update controller to mediatr +itsybitsylist
+x (B) update controller to mediatr +itsybitsylist
 (A) flesh out user stories +itsybitsylist
-(A) add visitor view that allows promising items +itsybitsylist
+x (A) add visitor view that allows promising items +itsybitsylist
 (A) implement proper persistence +itsybitsylist
 
 
