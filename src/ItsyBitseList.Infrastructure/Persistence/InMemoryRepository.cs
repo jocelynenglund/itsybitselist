@@ -5,6 +5,12 @@ namespace ItsyBitseList.Infrastructure.Persistence
 {
     public class InMemoryRepository : IWishlistRepository, IAsyncRepository<Wishlist>, IAsyncRepository<WishlistItem>
     {
+        
+        public static Guid FirstId = Guid.Parse("f07223ff-ec05-4a86-90c6-81944377e71e");
+        public static Guid SecondId = Guid.Parse("e1f39e36-2e0b-47ec-86f6-7ed53f9ce4c9");
+        public static Guid MovieCard = Guid.Parse("f0307763-0e69-4e47-987a-353c1245e15d");
+        public static Guid BarbieDoll = Guid.Parse("ab00b86c-6534-4f9d-8268-866117333a37");
+
         List<Wishlist> wishlists;
         public IEnumerable<Wishlist> Wishhlists => wishlists;
         public List<WishlistItem> items = new List<WishlistItem>();
@@ -16,16 +22,13 @@ namespace ItsyBitseList.Infrastructure.Persistence
 
         private void SeedData()
         {
-            var one = Guid.NewGuid();
-            var two = Guid.NewGuid();
-            CreateWishlist("me", one, "Birthday Wishlist");
-            CreateWishlist("me", two, "Christmas Wishlist");
-            items.Add(new WishlistItem(Guid.NewGuid(), one, "Bio kort"));
-            items.Add(new WishlistItem(Guid.NewGuid(), one, "Barbie Doll"));
-            items.Add(new WishlistItem(Guid.NewGuid(), two, "Robux"));
-            items.Add(new WishlistItem(Guid.NewGuid(), two, "Christmas dress"));
+            CreateWishlist("me", FirstId, "Birthday Wishlist");
+            CreateWishlist("me", SecondId, "Christmas Wishlist");
+            items.Add(new WishlistItem(MovieCard, FirstId, "Bio kort"));
+            items.Add(new WishlistItem(BarbieDoll, FirstId, "Barbie Doll"));
+            items.Add(new WishlistItem(Guid.NewGuid(), SecondId, "Robux"));
+            items.Add(new WishlistItem(Guid.NewGuid(), SecondId, "Christmas dress"));
         }
-
 
         public void CreateWishlist(string owner, Guid id, string wishlistName)
         {

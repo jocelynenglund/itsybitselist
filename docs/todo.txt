@@ -1,7 +1,8 @@
-(B) update controller to mediatr +itsybitsylist
+x (B) update controller to mediatr +itsybitsylist
 (A) flesh out user stories +itsybitsylist
-(A) add visitor view that allows promising items +itsybitsylist
+x (A) add visitor view that allows promising items +itsybitsylist
 (A) implement proper persistence +itsybitsylist
+x (C) Have a nice URL to access the app
 
 
 - mocking persistenc - make an instance, add singleton interface with the same instance
