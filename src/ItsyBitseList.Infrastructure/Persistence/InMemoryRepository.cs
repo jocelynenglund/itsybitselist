@@ -3,7 +3,7 @@ using ItsyBitseList.Core.WishlistCollectionAggregate;
 
 namespace ItsyBitseList.Infrastructure.Persistence
 {
-    public class InMemoryRepository : IWishlistRepository, IAsyncRepository<Wishlist>, IAsyncRepository<WishlistItem>
+    public class InMemoryRepository : IWishlistRepository, IAsyncRepository<Wishlist>
     {
         
         public static Guid FirstId = Guid.Parse("f07223ff-ec05-4a86-90c6-81944377e71e");
@@ -13,7 +13,6 @@ namespace ItsyBitseList.Infrastructure.Persistence
 
         List<Wishlist> wishlists;
         public IEnumerable<Wishlist> Wishhlists => wishlists;
-        public List<WishlistItem> items = new List<WishlistItem>();
         public InMemoryRepository(bool seeded = true)
         {
             wishlists = new List<Wishlist>();
@@ -24,10 +23,16 @@ namespace ItsyBitseList.Infrastructure.Persistence
         {
             CreateWishlist("me", FirstId, "Birthday Wishlist");
             CreateWishlist("me", SecondId, "Christmas Wishlist");
-            items.Add(new WishlistItem(MovieCard, FirstId, "Bio kort"));
-            items.Add(new WishlistItem(BarbieDoll, FirstId, "Barbie Doll"));
-            items.Add(new WishlistItem(Guid.NewGuid(), SecondId, "Robux"));
-            items.Add(new WishlistItem(Guid.NewGuid(), SecondId, "Christmas dress"));
+            wishlists.First(w=>w.Id == FirstId).SetItems(new List<WishlistItem>()
+            {
+                new WishlistItem(MovieCard, FirstId, "Bio kort"),
+                new WishlistItem(BarbieDoll, FirstId, "Barbie Doll")
+            });
+            wishlists.First(w => w.Id == SecondId).SetItems(new List<WishlistItem>()
+            {
+                new WishlistItem(Guid.NewGuid(), SecondId, "Robux"),
+                new WishlistItem(Guid.NewGuid(), SecondId, "Christmas dress")
+            });
         }
 
         public void CreateWishlist(string owner, Guid id, string wishlistName)
@@ -47,9 +52,7 @@ namespace ItsyBitseList.Infrastructure.Persistence
 
         public Task<Wishlist> GetByIdAsync(Guid id)
         {
-            var wishlistItems = items.Where(item => item.WishlistId == id);
             var wishlist = wishlists.First(item => item.Id == id);
-            wishlist.SetItems(wishlistItems.ToList());
             return Task.FromResult(wishlist);
         }
 
@@ -75,36 +78,6 @@ namespace ItsyBitseList.Infrastructure.Persistence
         public Task DeleteAsync(Wishlist entity)
         {
             wishlists.Remove(wishlists.First(item => item.Id == entity.Id));
-            return Task.CompletedTask;
-        }
-
-        Task<WishlistItem> IAsyncRepository<WishlistItem>.GetByIdAsync(Guid id)
-        {
-           return Task.FromResult(items.First(item => item.Id == id));
-        }
-
-        Task<IReadOnlyList<WishlistItem>> IAsyncRepository<WishlistItem>.ListAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<WishlistItem> AddAsync(WishlistItem entity)
-        {
-            entity = entity with { Id = Guid.NewGuid() };
-            items.Add(entity);
-            return Task.FromResult(entity);
-        }
-
-        public Task UpdateAsync(WishlistItem entity)
-        {
-            items.Remove(items.First(item => item.Id == entity.Id));
-            items.Add(entity);
-            return Task.CompletedTask;
-        }
-
-        public Task DeleteAsync(WishlistItem entity)
-        {
-            items.Remove(items.First(items => items.Id == entity.Id));
             return Task.CompletedTask;
         }
     }

@@ -9,17 +9,20 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishl
 
     public class AddItemToWishlistHandler : IRequestHandler<AddItemToWishlistCommand, Guid>
     {
-        private readonly IAsyncRepository<WishlistItem> _wishlistItemRepository;
+        private readonly IAsyncRepository<Wishlist> _wishlistRepository;
 
-        public AddItemToWishlistHandler(IAsyncRepository<WishlistItem> repository)
+        public AddItemToWishlistHandler(IAsyncRepository<Wishlist> repository)
         {
-            _wishlistItemRepository = repository;
+            _wishlistRepository = repository;
         }
         public async Task<Guid> Handle(AddItemToWishlistCommand request, CancellationToken cancellationToken)
         {
-            var wishlistItem = WishlistItem.CreateWith(request);
-            wishlistItem =  await _wishlistItemRepository.AddAsync(wishlistItem);
-            return wishlistItem.Id;
+            //var wishlistItem = WishlistItem.CreateWith(request);
+            var wishlist = await _wishlistRepository.GetByIdAsync(request.WishlistId);
+            var itemGuid = Guid.NewGuid();
+            wishlist.AddItem(itemGuid, request.ItemDetails);
+            await _wishlistRepository.UpdateAsync(wishlist);
+            return itemGuid;
         }
     }
 }

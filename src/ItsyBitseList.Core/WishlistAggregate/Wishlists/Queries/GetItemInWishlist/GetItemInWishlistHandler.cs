@@ -8,14 +8,15 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishli
     public record GetItemInWishlistQuery(Guid WishlistId, Guid ItemId): IRequest<ItemDetails>;
     public class GetItemInWishlistHandler : IRequestHandler<GetItemInWishlistQuery, ItemDetails>
     {
-        private readonly IAsyncRepository<WishlistItem> _repository;
-        public GetItemInWishlistHandler(IAsyncRepository<WishlistItem> repository)
+        private readonly IAsyncRepository<Wishlist> _repository;
+        public GetItemInWishlistHandler(IAsyncRepository<Wishlist> repository)
         {
             _repository = repository;
         }
         public async Task<ItemDetails> Handle(GetItemInWishlistQuery request, CancellationToken cancellationToken)
         {
-            var result = await _repository.GetByIdAsync(request.ItemId);
+            var result = (await _repository.GetByIdAsync(request.WishlistId)).Items.First(i =>i.Id == request.ItemId);
+
             if (result.WishlistId == request.WishlistId)
             {
                 return result.AsItemDetails();

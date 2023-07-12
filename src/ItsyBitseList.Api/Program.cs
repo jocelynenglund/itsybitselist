@@ -2,6 +2,8 @@ using ItsyBitseList.Core;
 using ItsyBitseList.Infrastructure;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using ItsyBitseList.Api;
+using ItsyBitseList.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +37,11 @@ builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
 
 builder.Services.AddInfrastructureDependencies();
 builder.Services.AddCoreDependencies();
+
+//bind settings
+builder.Services.Configure<StorageSettings>(builder.Configuration.GetSection(nameof(StorageSettings)));
+builder.Services.AddStorage();
+
 
 var app = builder.Build();
 

@@ -1,5 +1,4 @@
 ﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
