@@ -1,5 +1,5 @@
-using ItsyBitseList.Infrastructure;
 using ItsyBitseList.Core;
+using ItsyBitseList.Infrastructure;
 using System.Reflection;
 using System.Text.Json.Serialization;
 

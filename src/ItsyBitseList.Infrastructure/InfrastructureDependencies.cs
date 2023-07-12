@@ -9,10 +9,10 @@ namespace ItsyBitseList.Infrastructure
     {
         public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services)
         {
-            var repo = new InMemoryRepository();
+            var repo = new InMemoryRepository(seeded: false);
             services.AddSingleton<IAsyncRepository<Wishlist>>(repo);
             services.AddSingleton<IAsyncRepository<WishlistItem>>(repo);
-            services.AddSingleton<IWishlistRepository>(repo);
+            services.AddSingleton<IWishlistRepository>((sp) => repo);
             return services;
         }
 
