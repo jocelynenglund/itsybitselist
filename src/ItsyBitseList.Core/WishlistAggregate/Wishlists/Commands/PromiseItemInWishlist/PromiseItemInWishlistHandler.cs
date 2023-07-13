@@ -8,8 +8,8 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInW
     public record class PromiseItemInWishlistCommand(Guid WishlistId, Guid ItemId): IRequest<Guid>;
     public class PromiseItemInWishlistHandler : IRequestHandler<PromiseItemInWishlistCommand, Guid>
     {
-        private readonly IAsyncRepository<WishlistItem> _repository;
-        public PromiseItemInWishlistHandler(IAsyncRepository<WishlistItem> repository)
+        private readonly IAsyncRepository<Wishlist> _repository;
+        public PromiseItemInWishlistHandler(IAsyncRepository<Wishlist> repository)
         {
 
             _repository = repository;
@@ -17,7 +17,8 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInW
         }
         public async Task<Guid> Handle(PromiseItemInWishlistCommand request, CancellationToken cancellationToken)
         {
-            var toPromise = await _repository.GetByIdAsync(request.ItemId);
+            var wishlist = await _repository.GetByIdAsync(request.WishlistId);
+            var toPromise = wishlist.Items.First(i => i.Id == request.ItemId);
             if (toPromise.WishlistId != request.WishlistId)
             {
                 throw new UnauthorizedAccessException("Item not found in wishlist");
@@ -25,7 +26,7 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInW
             else
             {
                 var result = toPromise.Promised();
-                await _repository.UpdateAsync(toPromise);
+                await _repository.UpdateAsync(wishlist);
 
                 return result;
             }

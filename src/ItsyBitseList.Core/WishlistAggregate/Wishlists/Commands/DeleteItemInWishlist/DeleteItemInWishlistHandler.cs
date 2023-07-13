@@ -11,23 +11,21 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemInWi
 
     public class DeleteItemInWishlistHandler : IRequestHandler<DeleteItemInWishlistCommand>
     {
-        public IAsyncRepository<WishlistItem> _wishlistItemRepository;
-        public DeleteItemInWishlistHandler(IAsyncRepository<WishlistItem> repository)
+        public IAsyncRepository<Wishlist> _repository;
+        public DeleteItemInWishlistHandler(IAsyncRepository<Wishlist> repository)
         {
-            _wishlistItemRepository = repository;
+            this._repository = repository;
         }
         public async Task Handle(DeleteItemInWishlistCommand request, CancellationToken cancellationToken)
         {
-            var itemToDelete = await _wishlistItemRepository.GetByIdAsync(request.ItemId);
-            if (itemToDelete is null)
+            var wishlist = await _repository.GetByIdAsync(request.WishlistId);
+            var itemToDelete = wishlist.Items.First(item => item.Id == request.ItemId);
+            if (itemToDelete is null || itemToDelete.WishlistId != request.WishlistId)
             {
                 throw new UnauthorizedAccessException("Item not found in wishlist");
             }
-            else if (itemToDelete.WishlistId != request.WishlistId)
-            {
-                throw new UnauthorizedAccessException("Item not found in wishlist");
-            }
-            await _wishlistItemRepository.DeleteAsync(itemToDelete);
+            wishlist.Remove(request.ItemId);
+            await _repository.UpdateAsync(wishlist);
         }
 
     }

@@ -11,11 +11,17 @@ namespace ItsyBitseList.Infrastructure
         {
             var repo = new InMemoryRepository(seeded: false);
             services.AddSingleton<IAsyncRepository<Wishlist>>(repo);
-            services.AddSingleton<IAsyncRepository<WishlistItem>>(repo);
             services.AddSingleton<IWishlistRepository>((sp) => repo);
             return services;
         }
 
+
+        public static IServiceCollection AddStorage(this IServiceCollection services)
+        {
+            services.AddTransient<IAsyncRepository<Wishlist>, AzureTableRepository>();
+            services.AddScoped<IWishlistRepository, AzureTableRepository>();
+            return services;
+        }
     }
 
 }

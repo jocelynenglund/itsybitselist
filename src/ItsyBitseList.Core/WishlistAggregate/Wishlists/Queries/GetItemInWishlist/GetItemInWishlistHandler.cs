@@ -1,4 +1,5 @@
-﻿using ItsyBitseList.Core.Interfaces.Persistence;
+﻿using ItsyBitseList.Core.Constants;
+using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using MediatR;
 
@@ -8,20 +9,22 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishli
     public record GetItemInWishlistQuery(Guid WishlistId, Guid ItemId): IRequest<ItemDetails>;
     public class GetItemInWishlistHandler : IRequestHandler<GetItemInWishlistQuery, ItemDetails>
     {
-        private readonly IAsyncRepository<WishlistItem> _repository;
-        public GetItemInWishlistHandler(IAsyncRepository<WishlistItem> repository)
+        private readonly IAsyncRepository<Wishlist> _repository;
+        public GetItemInWishlistHandler(IAsyncRepository<Wishlist> repository)
         {
             _repository = repository;
         }
         public async Task<ItemDetails> Handle(GetItemInWishlistQuery request, CancellationToken cancellationToken)
         {
-            var result = await _repository.GetByIdAsync(request.ItemId);
-            if (result.WishlistId == request.WishlistId)
+            var result = (await _repository.GetByIdAsync(request.WishlistId)).Items.FirstOrDefault(i =>i.Id == request.ItemId);
+
+            if (result == null || result.WishlistId != request.WishlistId)
+            {
+                throw new InvalidOperationException(ErrorMessages.ItemNotFound);
+            }
+            else
             {
                 return result.AsItemDetails();
-            } else
-            {
-                throw new UnauthorizedAccessException("Item not found in wishlist");
             }
 
         }

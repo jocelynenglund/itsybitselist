@@ -1,4 +1,5 @@
 ﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
+using System.Text.Json.Serialization;
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
@@ -6,10 +7,13 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
     {
         public Guid Id { get; init; }
         public string Description { get; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public State State { get; private set; }
         public Guid WishlistId { get; set; }
 
-        private Guid _promiseGuid;
+        [JsonInclude]
+        public Guid? PromiseGuid {  get; private set; }
         
         public WishlistItem(Guid id, Guid wishlistId, string description)
         {
@@ -18,11 +22,18 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             State = State.Wished;
             WishlistId = wishlistId;
         }
+        [JsonConstructor]
+        public WishlistItem(Guid id, Guid wishlistId, string description, State state, Guid? promiseGuid) : this(id, wishlistId, description)
+        {
+            State = state;
+            PromiseGuid = promiseGuid;
+        }
+
         public Guid Promised()
         {
             State = State.Promised;
-            _promiseGuid = Guid.NewGuid();
-            return _promiseGuid;
+            PromiseGuid = Guid.NewGuid();
+            return PromiseGuid.Value;
         }
         public void Verified()
         {
@@ -36,7 +47,7 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
 
         public void Revert(Guid id)
         {
-            if (_promiseGuid == id)
+            if (PromiseGuid == id)
             {
                 State = State.Wished;
             } else

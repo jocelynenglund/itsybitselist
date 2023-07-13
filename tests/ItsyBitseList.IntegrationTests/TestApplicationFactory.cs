@@ -18,7 +18,6 @@ namespace ItsyBitseList.IntegrationTests
             {
                 var repo = new InMemoryRepository(seeded: true);
                 services.AddSingleton<IAsyncRepository<Wishlist>>((sp) => repo);
-                services.AddSingleton<IAsyncRepository<WishlistItem>>((sp) => repo);
                 services.AddSingleton<IWishlistRepository>((sp) => repo);
             });
         }
