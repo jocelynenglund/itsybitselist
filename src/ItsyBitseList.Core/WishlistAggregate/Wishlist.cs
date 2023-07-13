@@ -33,9 +33,9 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
         }
 
         // a method to add items to the wishlist
-        public Wishlist AddItem(Guid id, string item)
+        public Wishlist AddItem(Guid id, string item, Uri? link = null)
         {
-            items.Add(new WishlistItem(id, this.Id, item));
+            items.Add(new WishlistItem(id, this.Id, item, link));
             return this;
         }
 

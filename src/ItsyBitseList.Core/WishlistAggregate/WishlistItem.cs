@@ -7,6 +7,7 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
     {
         public Guid Id { get; init; }
         public string Description { get; }
+        public Uri? Link { get; init; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public State State { get; private set; }
@@ -15,15 +16,16 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
         [JsonInclude]
         public Guid? PromiseGuid {  get; private set; }
         
-        public WishlistItem(Guid id, Guid wishlistId, string description)
+        public WishlistItem(Guid id, Guid wishlistId, string description, Uri? link=null)
         {
             Id = id;
             Description = description;
             State = State.Wished;
             WishlistId = wishlistId;
+            Link = link;
         }
         [JsonConstructor]
-        public WishlistItem(Guid id, Guid wishlistId, string description, State state, Guid? promiseGuid) : this(id, wishlistId, description)
+        public WishlistItem(Guid id, Guid wishlistId, string description, State state, Guid? promiseGuid, Uri? link) : this(id, wishlistId, description, link)
         {
             State = state;
             PromiseGuid = promiseGuid;

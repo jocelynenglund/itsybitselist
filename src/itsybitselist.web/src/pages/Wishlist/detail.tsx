@@ -16,12 +16,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
 
 import appenv from "../../appenv";
+import { Url } from "url";
 
 const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IItem {
   id: string;
   description: string;
   state: "Wished" | "Promised" | "Verified";
+  link: Url;
 }
 interface IWishlistDetailView {
   name: string;

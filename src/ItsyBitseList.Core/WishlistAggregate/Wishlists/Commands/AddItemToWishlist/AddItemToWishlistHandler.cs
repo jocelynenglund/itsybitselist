@@ -5,7 +5,7 @@ using MediatR;
 namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist
 {
 
-    public record AddItemToWishlistCommand(Guid WishlistId, string ItemDetails): IRequest<Guid>;
+    public record AddItemToWishlistCommand(Guid WishlistId, string ItemDetails, Uri? Link = null): IRequest<Guid>;
 
     public class AddItemToWishlistHandler : IRequestHandler<AddItemToWishlistCommand, Guid>
     {
@@ -20,7 +20,7 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishl
             //var wishlistItem = WishlistItem.CreateWith(request);
             var wishlist = await _wishlistRepository.GetByIdAsync(request.WishlistId);
             var itemGuid = Guid.NewGuid();
-            wishlist.AddItem(itemGuid, request.ItemDetails);
+            wishlist.AddItem(itemGuid, request.ItemDetails, request.Link);
             await _wishlistRepository.UpdateAsync(wishlist);
             return itemGuid;
         }

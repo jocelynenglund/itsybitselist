@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist
 {
-    public record Item(Guid Id, State State, string Description);
+    public record Item(Guid Id, State State, string Description, Uri? Link);
     public record WishListDetails(string Name, IEnumerable<Item> Items);
     public record GetWishlistQuery(Guid Id): IRequest<WishListDetails>;
     public class GetWishlistHandler : IRequestHandler<GetWishlistQuery, WishListDetails>

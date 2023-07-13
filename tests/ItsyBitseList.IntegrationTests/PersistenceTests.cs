@@ -56,6 +56,19 @@ namespace ItsyBitseList.IntegrationTests
         }
 
         [Fact]
+        public async Task CanAddItemsWithLinkToWishlist()
+        {
+            var itemName = "My Wishlist Item";
+            var uri = new Uri("https://www.google.com");
+            (var location, var wishlist) = await CreateAndAddItems(itemName, uri);
+            var item = wishlist.Items.First();
+            item.Description.Should().Be(itemName);
+            item.Link.Should().Be(uri);
+
+            Cleanup();
+        }
+
+        [Fact]
         public async Task CanPromiseItem()
         {
             (var location, var wishlist) = await CreateAndAddItems("My Wishlist Item");
@@ -107,11 +120,11 @@ namespace ItsyBitseList.IntegrationTests
             return await _client.PatchAsync($"{location}", new StringContent($"{{\"state\":\"{State.Wished}\",\"promiseKey\":{promiseKey}}}", Encoding.UTF8, "application/json"));
         }
 
-        private async Task<(string, WishListDetails)> CreateAndAddItems(string itemName)
+        private async Task<(string, WishListDetails)> CreateAndAddItems(string itemName, Uri? uri = null)
         {
             (var response, var location) = await CreateWishlist("{\"name\":\"My Wishlist\"}");
-
-            var itemResponse = await _client.PostAsync($"{location}/item", new StringContent($"{{\"details\":\"{itemName}\"}}", Encoding.UTF8, "application/json"));
+            var content = uri == null ? $"{{\"details\":\"{itemName}\"}}" : $"{{\"details\":\"{itemName}\", \"link\":\"{uri}\"}}";
+            var itemResponse = await _client.PostAsync($"{location}/item", new StringContent(content, Encoding.UTF8, "application/json"));
             itemResponse.EnsureSuccessStatusCode(); // Status Code 200-299
             string itemLocation = itemResponse.Headers.Location.ToString();
 
