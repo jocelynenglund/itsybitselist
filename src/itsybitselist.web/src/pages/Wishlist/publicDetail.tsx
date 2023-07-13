@@ -45,6 +45,10 @@ export const PublicDetail = () => {
     fetchWishlistDetails();
   }, [fetchWishlistDetails]);
 
+  useEffect(() => {
+    document.title = `ItsyBitsyList - ${wishlist.name}`;
+  }, [id, wishlist.name]);
+
   const promiseItem = (itemId: string, promiseKey?: string) => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");

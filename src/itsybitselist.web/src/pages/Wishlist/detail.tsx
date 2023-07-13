@@ -54,7 +54,7 @@ export const Detail = () => {
 
   useEffect(() => {
     document.title = `ItsyBitsyList - ${wishlist.name}`;
-  }, [id]);
+  }, [id, wishlist.name]);
 
   useEffect(() => {
     fetchWishlistDetails();
