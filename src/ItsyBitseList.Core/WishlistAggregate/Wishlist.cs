@@ -1,24 +1,31 @@
-﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
+﻿using ItsyBitseList.Core.Interfaces;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
+using System.Text.Json.Serialization;
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
     // create a Wishlist class according to the tests
-    public class Wishlist
+    public class Wishlist : IRootEntity
     {
+        public static string DefaultOwner = "Anonymous";
+        public Wishlist() { } // required for Json deserialization
         private Wishlist(Guid id, string name, string owner)
         {
             Id = id;
             Name = name;
-            items = items ?? new List<WishlistItem>();
             Owner = owner;
         }
-        public Guid Id { get; set; }
-        public string Name { get; }
-        public string Owner { get; set; }
-        private List<WishlistItem> items;
+        [JsonInclude]
+        public Guid Id { get; init; }
+        [JsonInclude]
+        public string Name { get; init; }
+        [JsonInclude]
+        public string Owner { get; init; } = DefaultOwner;
+        private List<WishlistItem> items = new();
 
         public void SetItems(List<WishlistItem> items) => this.items = items;
-        public IReadOnlyCollection<WishlistItem> Items => items.AsReadOnly();
+        [JsonInclude]
+        public IReadOnlyCollection<WishlistItem> Items { get => items.AsReadOnly(); init => items = value.ToList(); }
 
         public static Wishlist CreateWith(Guid id, string name, string? owner = null)
         {
@@ -39,7 +46,7 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
 
         internal static Wishlist CreateWith(CreateWishlistCommand request)
         {
-            return new Wishlist(Guid.NewGuid(), request.WishlistName, request.Owner);
+            return new Wishlist(Guid.NewGuid(), request.WishlistName, request.Owner ?? DefaultOwner);
         }
     }
 }

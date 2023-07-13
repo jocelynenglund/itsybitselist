@@ -63,7 +63,6 @@ namespace ItsyBitseList.Infrastructure.Persistence
 
         public Task<Wishlist> AddAsync(Wishlist entity)
         {
-            entity.Id = Guid.NewGuid();
             wishlists.Add(entity);
             return Task.FromResult(entity);
         }

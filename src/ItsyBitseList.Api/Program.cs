@@ -40,7 +40,7 @@ builder.Services.AddCoreDependencies();
 
 //bind settings
 builder.Services.Configure<StorageSettings>(builder.Configuration.GetSection(nameof(StorageSettings)));
-//builder.Services.AddStorage();
+builder.Services.AddStorage();
 
 
 var app = builder.Build();

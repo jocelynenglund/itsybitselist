@@ -1,4 +1,5 @@
-﻿using ItsyBitseList.Core.Interfaces.Persistence;
+﻿using ItsyBitseList.Core.Constants;
+using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using MediatR;
 
@@ -22,7 +23,7 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands
                 var toRevert = wishlist.Items.First(i => i.Id == request.ItemId);
                 if (toRevert.WishlistId != request.WishlistId)
                 {
-                    throw new UnauthorizedAccessException("Item not found in wishlist");
+                    throw new InvalidOperationException(ErrorMessages.ItemNotFound);
                 }
                 else
                 {

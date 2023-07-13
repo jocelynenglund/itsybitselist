@@ -19,7 +19,6 @@ namespace ItsyBitseList.Infrastructure
         public static IServiceCollection AddStorage(this IServiceCollection services)
         {
             services.AddTransient<IAsyncRepository<Wishlist>, AzureTableRepository>();
-            services.AddScoped<IAsyncRepository<WishlistItem>,AzureTableRepository>();
             services.AddScoped<IWishlistRepository, AzureTableRepository>();
             return services;
         }

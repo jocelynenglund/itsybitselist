@@ -1,4 +1,5 @@
-﻿using ItsyBitseList.Core.Interfaces.Persistence;
+﻿using ItsyBitseList.Core.Constants;
+using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using MediatR;
 
@@ -15,14 +16,15 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishli
         }
         public async Task<ItemDetails> Handle(GetItemInWishlistQuery request, CancellationToken cancellationToken)
         {
-            var result = (await _repository.GetByIdAsync(request.WishlistId)).Items.First(i =>i.Id == request.ItemId);
+            var result = (await _repository.GetByIdAsync(request.WishlistId)).Items.FirstOrDefault(i =>i.Id == request.ItemId);
 
-            if (result.WishlistId == request.WishlistId)
+            if (result == null || result.WishlistId != request.WishlistId)
+            {
+                throw new InvalidOperationException(ErrorMessages.ItemNotFound);
+            }
+            else
             {
                 return result.AsItemDetails();
-            } else
-            {
-                throw new UnauthorizedAccessException("Item not found in wishlist");
             }
 
         }

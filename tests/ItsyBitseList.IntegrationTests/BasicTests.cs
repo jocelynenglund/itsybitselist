@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using ItsyBitseList.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -84,6 +83,21 @@ namespace ItsyBitseList.IntegrationTests
             var revertResponse = await _client.PatchAsync($"/wishlist/{InMemoryRepository.FirstId}/item/{InMemoryRepository.MovieCard}", new StringContent($"{{\"state\":\"{State.Wished}\", \"promiseKey\": \"{promiseKey}\"}}", Encoding.UTF8, "application/json"));
 
             revertResponse.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task CanDeleteWishlist()
+        {
+            var response = await _client.PostAsync("/wishlist", new StringContent("{\"name\":\"My Wishlist\"}", Encoding.UTF8, "application/json"));
+
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            string location = response.Headers.Location.ToString();
+
+            var deleteResponse = await _client.DeleteAsync(location);
+            deleteResponse.EnsureSuccessStatusCode(); // Status Code 200-299
+
+            var wishlistResponse = await _client.GetAsync(location);
+            wishlistResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound); // Status Code 200-299
         }
     }
 }
