@@ -63,3 +63,11 @@ footer {
   text-align: center;
   width: 100%;
 }
+.formControl {
+  margin-bottom: 10px;
+}
+
+.button {
+  margin-left: 10px;
+  float: right;
+}
