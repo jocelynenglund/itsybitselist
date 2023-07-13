@@ -8,7 +8,7 @@ namespace ItsyBitseList.Core
     {
         public static WishListDetails AsWishlistDetails(this Wishlist wishlist)
         {
-            return new WishListDetails(wishlist.Name, wishlist.Items.Select(x => new Item(x.Id, x.State, x.Description)));
+            return new WishListDetails(wishlist.Name, wishlist.Items.Select(x => new Item(x.Id, x.State, x.Description, x.Link)));
         }
 
         public static ItemDetails AsItemDetails(this WishlistItem item)

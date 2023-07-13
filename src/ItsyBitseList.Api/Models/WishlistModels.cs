@@ -9,7 +9,8 @@
     /// Request model for item creation
     /// </summary>
     /// <param name="Details"></param>
-    public record ItemCreationRequest(string Details);
+    /// <param name="Link">Optional link to item</param>
+    public record ItemCreationRequest(string Details, Uri? Link);
     
     /// <summary>
     /// Patch request model for item promise

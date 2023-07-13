@@ -101,7 +101,7 @@ namespace ItsyBitseList.Api.Controllers
         [HttpPost("/wishlist/{id}/item", Name = "AddItemToWishlist")]
         public async Task<IActionResult> Post([FromHeader] string? owner, [FromRoute] Guid id, [FromBody] ItemCreationRequest item)
         {
-            var itemId = (await _mediator.Send(new AddItemToWishlistCommand(id, item.Details)));
+            var itemId = (await _mediator.Send(new AddItemToWishlistCommand(id, item.Details, item.Link)));
 
             return CreatedAtRoute("GetItemInWishlist", new { id, itemId }, null);
         }
