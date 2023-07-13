@@ -53,6 +53,10 @@ export const Detail = () => {
   }, [id]);
 
   useEffect(() => {
+    document.title = `ItsyBitsyList - ${wishlist.name}`;
+  }, [id]);
+
+  useEffect(() => {
     fetchWishlistDetails();
   }, [fetchWishlistDetails]);
 
@@ -133,13 +137,16 @@ export const Detail = () => {
           </Navbar.Collapse>
         </Navbar>
       </div>
-      {wishlist.items.length === 0 && (
-        <h2>Your list is empty! Let's add something</h2>
-      )}
-      {wishlist.items.map((item, idx) => (
-        <Item key={idx} item={item} action="delete" callback={deleteItem} />
-      ))}
-
+      <div className="wishlist">
+        {wishlist.items.length === 0 && (
+          <div className="empty">
+            <h2>Your list is empty! Let's add something</h2>
+          </div>
+        )}
+        {wishlist.items.map((item, idx) => (
+          <Item key={idx} item={item} action="delete" callback={deleteItem} />
+        ))}
+      </div>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add Item</Modal.Title>
@@ -158,6 +165,12 @@ export const Detail = () => {
           </Form>
         </Modal.Body>
       </Modal>
+      <footer>
+        <b>
+          Create a new wishlist <a href="/">here</a>. <br />
+          Make sure you bookmark this page if you want to edit this later!
+        </b>
+      </footer>
     </div>
   );
 };

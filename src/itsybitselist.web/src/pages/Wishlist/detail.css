@@ -1,12 +1,14 @@
 .custom-navbar {
   height: 100px;
-  background-color: pink;
+  background-color: #ebdcc7;
   color: white;
 }
 
 .container {
   height: 100vh;
   max-width: 500px;
+  display: flex;
+  flex-direction: column;
   display: flex;
   flex-direction: column;
 }
@@ -49,6 +51,10 @@ body {
 }
 .wishlist {
   flex: 1;
+}
+.empty {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 footer {
   bottom: 0;
