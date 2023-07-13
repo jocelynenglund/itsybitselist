@@ -6,7 +6,6 @@ import {
   Navbar,
   Button,
   Modal,
-  InputGroup,
   FormControl,
   Nav,
   Alert,
