@@ -139,7 +139,9 @@ export const Detail = () => {
       </div>
       <div className="wishlist">
         {wishlist.items.length === 0 && (
-          <h2>Your list is empty! Let's add something</h2>
+          <div className="empty">
+            <h2>Your list is empty! Let's add something</h2>
+          </div>
         )}
         {wishlist.items.map((item, idx) => (
           <Item key={idx} item={item} action="delete" callback={deleteItem} />
@@ -165,8 +167,8 @@ export const Detail = () => {
       </Modal>
       <footer>
         <b>
-          Create a new wishlist <a href="/">here</a>. Make sure you bookmark
-          this page if you want to edit this later!
+          Create a new wishlist <a href="/">here</a>. <br />
+          Make sure you bookmark this page if you want to edit this later!
         </b>
       </footer>
     </div>
