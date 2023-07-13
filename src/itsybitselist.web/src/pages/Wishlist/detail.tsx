@@ -156,17 +156,27 @@ export const Detail = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl {...register("details")} />
-            <FormControl {...register("link")} />
+            <FormControl
+              className="formControl"
+              {...register("details")}
+              placeholder="Description"
+            />
+            <FormControl
+              className="formControl"
+              {...register("link")}
+              placeholder="Link to item or store"
+            />
 
-            <InputGroup>
-              <Button type="submit" variant="primary">
-                Add Item
-              </Button>
-              <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Close
-              </Button>
-            </InputGroup>
+            <Button
+              variant="secondary"
+              className="button"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </Button>
+            <Button type="submit" variant="primary" className="button">
+              Add Item
+            </Button>
           </Form>
         </Modal.Body>
       </Modal>
