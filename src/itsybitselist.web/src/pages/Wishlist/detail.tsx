@@ -31,6 +31,7 @@ interface IWishlistDetailView {
 }
 interface IFormInput {
   details: string;
+  link: Url;
 }
 export const Detail = () => {
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
@@ -66,7 +67,7 @@ export const Detail = () => {
     const headers = new Headers();
     headers.append("owner", owner!);
     headers.append("Content-Type", "application/json");
-    const body = JSON.stringify({ details: data.details });
+    const body = JSON.stringify({ details: data.details, link: data.link });
 
     fetch(`${apiUrl}/wishlist/${id}/item`, {
       method: "POST",
@@ -155,8 +156,10 @@ export const Detail = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl {...register("details")} />
+            <FormControl {...register("link")} />
+
             <InputGroup>
-              <FormControl {...register("details")} />
               <Button type="submit" variant="primary">
                 Add Item
               </Button>
