@@ -105,22 +105,30 @@ export const PublicDetail = () => {
           </Navbar.Collapse>
         </Navbar>
       </div>
-      {wishlist.items.length === 0 && (
-        <h2>The list is still empty, check again later!</h2>
-      )}
-      {wishlist.items.map((item, idx) => {
-        console.log(promiseDictionary[item.id], "key is");
+      <div className="wishlist">
+        {wishlist.items.length === 0 && (
+          <h2>The list is still empty, check again later!</h2>
+        )}
+        {wishlist.items.map((item, idx) => {
+          console.log(promiseDictionary[item.id], "key is");
 
-        return (
-          <Item
-            key={idx}
-            item={item}
-            callback={promiseItem}
-            promiseKey={promiseDictionary[item.id]}
-            action="promise"
-          />
-        );
-      })}
+          return (
+            <Item
+              key={idx}
+              item={item}
+              callback={promiseItem}
+              promiseKey={promiseDictionary[item.id]}
+              action="promise"
+            />
+          );
+        })}
+      </div>
+
+      <footer>
+        <b>
+          Create your own wishlist <a href="/">here</a>
+        </b>
+      </footer>
     </div>
   );
 };
