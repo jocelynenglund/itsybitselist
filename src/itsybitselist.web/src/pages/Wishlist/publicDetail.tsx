@@ -32,7 +32,7 @@ export const PublicDetail = () => {
 
   const fetchWishlistDetails = useCallback(() => {
     const headers = new Headers();
-    fetch(`${apiUrl}/wishlist/${id}`, {
+    fetch(`${apiUrl}/public/${id}`, {
       headers: headers,
     })
       .then((response) => {
@@ -56,7 +56,7 @@ export const PublicDetail = () => {
       ? JSON.stringify({ promiseKey: promiseKey, state: "Wished" })
       : JSON.stringify({ state: "Promised" });
 
-    fetch(`${apiUrl}/wishlist/${id}/item/${itemId}`, {
+    fetch(`${apiUrl}/public/${id}/item/${itemId}`, {
       method: "PATCH",
       headers: headers,
       body: body,
