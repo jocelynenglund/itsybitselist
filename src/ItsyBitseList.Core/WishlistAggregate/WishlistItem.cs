@@ -25,7 +25,7 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             Link = link;
         }
         [JsonConstructor]
-        public WishlistItem(Guid id, Guid wishlistId, string description, State state, Guid? promiseGuid, Uri? link) : this(id, wishlistId, description, link)
+        public WishlistItem(Guid id, Guid wishlistId, string description, State state, Guid? promiseGuid, Uri? link=null) : this(id, wishlistId, description, link)
         {
             State = state;
             PromiseGuid = promiseGuid;
