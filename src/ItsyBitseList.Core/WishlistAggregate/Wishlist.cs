@@ -1,6 +1,7 @@
 ﻿using ItsyBitseList.Core.Interfaces;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
+using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands;
 using System.Text.Json.Serialization;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {

@@ -1,4 +1,5 @@
-﻿using ItsyBitseList.Core.Constants;
+﻿using ItsyBIT.Utilities;
+using ItsyBitseList.Core.Constants;
 using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using MediatR;
@@ -7,7 +8,16 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands
 {
     public class RevertPromiseItemInWishlist
     {
-        public record class RevertPromiseItemInWishlistCommand(Guid WishlistId, Guid ItemId, Guid PromisedBy): IRequest;
+        public record class RevertPromiseItemInWishlistCommand(Guid WishlistId, Guid ItemId, Guid PromisedBy): IRequest
+        {
+            public RevertPromiseItemInWishlistCommand(string publicId, Guid itemId, Guid promisedBy):
+            this(
+                Guid.TryParse(publicId, out var parsedId) 
+                    ? parsedId 
+                    : new EncodedIdentifier(publicId).Guid, 
+                itemId,
+                promisedBy) { }
+        };
 
         public class RevertPromiseItemInWishlistHandler : IRequestHandler<RevertPromiseItemInWishlistCommand>
         {

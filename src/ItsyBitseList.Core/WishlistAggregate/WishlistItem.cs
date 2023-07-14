@@ -1,5 +1,6 @@
-﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
+﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands;
 using System.Text.Json.Serialization;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {

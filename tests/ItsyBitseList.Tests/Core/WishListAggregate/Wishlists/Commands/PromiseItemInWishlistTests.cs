@@ -1,13 +1,7 @@
-﻿using FluentAssertions;
-using ItsyBitseList.Core.Interfaces.Persistence;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInWishlist;
+﻿using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInWishlist;
 
 namespace ItsyBitseList.Tests.Core.WishListAggregate.Wishlists.Commands
 {

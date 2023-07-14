@@ -1,15 +1,13 @@
 ﻿using ItsyBitseList.Api.Models;
 using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemInWishlist;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInWishlist;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlists;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.RevertPromiseItemInWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemInWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlists;
 
 namespace ItsyBitseList.Api.Controllers
 {
@@ -110,6 +108,7 @@ namespace ItsyBitseList.Api.Controllers
         /// Gets a specific item in a wishlist
         /// </summary> 
         [HttpGet("/wishlist/{id}/item/{itemId}", Name = "GetItemInWishlist")]
+        [ProducesResponseType(typeof(ItemDetails), 200)]
         public async Task<IActionResult> GetItemInWishlist([FromHeader] string? owner, [FromRoute] Guid id, [FromRoute] Guid itemId)
         {
             try
@@ -125,22 +124,6 @@ namespace ItsyBitseList.Api.Controllers
 
         }
 
-        [HttpPatch("/wishlist/{id}/item/{itemId}", Name = "PromiseItemInWishlist")]
-        public async Task<IActionResult> Patch([FromRoute] Guid id, [FromRoute] Guid itemId, [FromBody] PatchRequest request)
-        {
-            if (request.State == "Promised")
-            {
-                var promised = await _mediator.Send(new PromiseItemInWishlistCommand(id, itemId));
-                return Ok(promised);
-            }
-            if (request.PromiseKey.HasValue)
-            {
-                await _mediator.Send(new RevertPromiseItemInWishlistCommand(id, itemId, request.PromiseKey.Value));
-                return Ok(request.PromiseKey.Value);
-            }
-
-            return NoContent();
-        }
 
         [HttpDelete("/wishlist/{id}/item/{itemId}", Name = "DeleteItemInWishlist")]
         public async Task<IActionResult> Delete([FromHeader] string? owner, [FromRoute] Guid id, [FromRoute] Guid itemId)

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
 namespace ItsyBitseList.IntegrationTests.AzureTableRepository
 {
@@ -40,7 +40,7 @@ namespace ItsyBitseList.IntegrationTests.AzureTableRepository
         {
             var itemName = "My Wishlist Item";
 
-            (var location, var wishlist) = await CreateAndAddItems(itemName);
+            (var location, var wishlist, _) = await CreateAndAddItems(itemName);
             wishlist.Items.Should().Contain(i => i.Description == itemName);
             Cleanup();
         }
@@ -50,7 +50,7 @@ namespace ItsyBitseList.IntegrationTests.AzureTableRepository
         {
             var itemName = "My Wishlist Item";
             var uri = new Uri("https://www.google.com");
-            (var location, var wishlist) = await CreateAndAddItems(itemName, uri);
+            (var location, var wishlist, _) = await CreateAndAddItems(itemName, uri);
             var item = wishlist.Items.First();
             item.Description.Should().Be(itemName);
             item.Link.Should().Be(uri);
@@ -61,14 +61,14 @@ namespace ItsyBitseList.IntegrationTests.AzureTableRepository
         [Fact]
         public async Task CanDeleteItem()
         {
-            (var location, _) = await CreateAndAddItems("My Wishlist Item");
+            (var location, _, _) = await CreateAndAddItems("My Wishlist Item");
 
             HttpResponseMessage deleteResponse = await _client.DeleteAsync(location);
             var itemResponse = await _client.GetAsync(location);
 
             deleteResponse.EnsureSuccessStatusCode();
             itemResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            
+
             Cleanup();
         }
     }
