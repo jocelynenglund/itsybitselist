@@ -27,6 +27,7 @@ interface IItem {
 interface IWishlistDetailView {
   name: string;
   items: IItem[];
+  publicId?: string | undefined;
 }
 interface IFormInput {
   details: string;
@@ -36,6 +37,7 @@ export const Detail = () => {
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
     name: "",
     items: [],
+    publicId: undefined,
   });
 
   const { id, owner } = useParams<{ id: string; owner: string }>();
@@ -94,7 +96,7 @@ export const Detail = () => {
   };
 
   const handleShare = () => {
-    const shareUrl = `${window.location.origin}/wishlist/public/${id}`;
+    const shareUrl = `${window.location.origin}/wishlist/public/${wishlist.publicId}`;
     navigator.clipboard.writeText(shareUrl);
     setShowAlert(true);
     setTimeout(() => {
