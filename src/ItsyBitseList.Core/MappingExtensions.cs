@@ -1,6 +1,6 @@
-﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
-using ItsyBitseList.Core.WishlistCollectionAggregate;
+﻿using ItsyBitseList.Core.WishlistCollectionAggregate;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
 namespace ItsyBitseList.Core
 {

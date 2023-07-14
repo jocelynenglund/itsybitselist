@@ -1,11 +1,11 @@
-﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
-using ItsyBitseList.Core.WishlistCollectionAggregate;
-using ItsyBitseList.Infrastructure.Persistence;
+﻿using ItsyBitseList.Core.WishlistCollectionAggregate;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
 namespace ItsyBitseList.IntegrationTests.AzureTableRepository
 {
@@ -30,19 +30,22 @@ namespace ItsyBitseList.IntegrationTests.AzureTableRepository
             return await _client.PatchAsync($"{location}", new StringContent($"{{\"state\":\"{State.Wished}\",\"promiseKey\":{promiseKey}}}", Encoding.UTF8, "application/json"));
         }
 
-        protected async Task<(string, WishListDetails)> CreateAndAddItems(string itemName, Uri? uri = null)
+        protected async Task<(string, WishListDetails, ItemDetails)> CreateAndAddItems(string itemName, Uri? uri = null)
         {
             (var response, var location) = await CreateWishlist("{\"name\":\"My Wishlist\"}");
             var content = uri == null ? $"{{\"details\":\"{itemName}\"}}" : $"{{\"details\":\"{itemName}\", \"link\":\"{uri}\"}}";
-            var itemResponse = await _client.PostAsync($"{location}/item", new StringContent(content, Encoding.UTF8, "application/json"));
-            itemResponse.EnsureSuccessStatusCode(); // Status Code 200-299
-            string itemLocation = itemResponse.Headers.Location.ToString();
+            var addItemResponse = await _client.PostAsync($"{location}/item", new StringContent(content, Encoding.UTF8, "application/json"));
+            addItemResponse.EnsureSuccessStatusCode(); // Status Code 200-299
+            string itemLocation = addItemResponse.Headers.Location.ToString();
+            
+            var itemResponse = await _client.GetAsync(itemLocation);
+            var item = await Parse<ItemDetails>(itemResponse);
 
             var wishlistResponse = await _client.GetAsync(location);
             wishlistResponse.EnsureSuccessStatusCode(); // Status Code 200-299
             WishListDetails? wishlist = await Parse<WishListDetails>(wishlistResponse);
 
-            return (itemLocation, wishlist);
+            return (itemLocation, wishlist, item);
         }
 
         protected static async Task<T> Parse<T>(HttpResponseMessage wishlistResponse)
