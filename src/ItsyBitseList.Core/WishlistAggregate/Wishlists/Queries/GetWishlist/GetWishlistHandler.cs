@@ -1,11 +1,12 @@
-﻿using ItsyBitseList.Core.Interfaces.Persistence;
+﻿using ItsyBIT.Utilities;
+using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using MediatR;
 
 namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist
 {
     public record Item(Guid Id, State State, string Description, Uri? Link);
-    public record WishListDetails(string Name, IEnumerable<Item> Items);
+    public record WishListDetails(string Name, IEnumerable<Item> Items, string PublicId);
     public record GetWishlistQuery(Guid Id): IRequest<WishListDetails>;
     public class GetWishlistHandler : IRequestHandler<GetWishlistQuery, WishListDetails>
     {
@@ -17,7 +18,8 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist
         }
         public async Task<WishListDetails> Handle(GetWishlistQuery request, CancellationToken cancellationToken)
         {
-            return (await _wishlistRepository.GetByIdAsync(request.Id)).AsWishlistDetails();
+            var publicId = new EncodedIdentifier(request.Id).EncodedShortKey;
+            return (await _wishlistRepository.GetByIdAsync(request.Id)).AsWishlistDetails(publicId);
         }
     }
 }
