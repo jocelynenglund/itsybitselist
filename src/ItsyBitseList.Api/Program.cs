@@ -1,9 +1,8 @@
 using ItsyBitseList.Core;
 using ItsyBitseList.Infrastructure;
+using ItsyBitseList.Infrastructure.Settings;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using ItsyBitseList.Api;
-using ItsyBitseList.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 

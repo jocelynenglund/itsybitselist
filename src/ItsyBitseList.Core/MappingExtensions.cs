@@ -6,9 +6,13 @@ namespace ItsyBitseList.Core
 {
     public static class MappingExtensions
     {
-        public static WishListDetails AsWishlistDetails(this Wishlist wishlist)
+        public static WishListDetails AsWishlistDetails(this Wishlist wishlist, string publicId)
         {
-            return new WishListDetails(wishlist.Name, wishlist.Items.Select(x => new Item(x.Id, x.State, x.Description, x.Link)));
+            return new WishListDetails(
+                wishlist.Name, 
+                wishlist.Items.Select(x => new Item(x.Id, x.State, x.Description, x.Link)),
+                publicId
+                );
         }
 
         public static ItemDetails AsItemDetails(this WishlistItem item)
