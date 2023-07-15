@@ -10,9 +10,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\ItsyBIT.Utilities\ItsyBIT.Utilities.csproj" />
-    <ProjectReference Include="..\src\ItsyBitseList.Core\ItsyBitseList.Core.csproj" />
-    <ProjectReference Include="..\src\ItsyBitseList.Infrastructure\ItsyBitseList.Infrastructure.csproj" />
+    <ProjectReference Include="..\ItsyBIT.Utilities\ItsyBIT.Utilities.csproj" />
+    <ProjectReference Include="..\ItsyBitseList.Core\ItsyBitseList.Core.csproj" />
+    <ProjectReference Include="..\ItsyBitseList.Infrastructure\ItsyBitseList.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">
