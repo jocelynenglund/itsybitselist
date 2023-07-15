@@ -4,3 +4,6 @@ content-type: application/json
 {
     "name": "perr"
 }
+
+###
+GET http://localhost:7258/api/wishlist/d07a8c2c-0708-44b7-a871-0a205c03bd2e
