@@ -1,4 +1,4 @@
-POST http://localhost:7258/api/wishlist
+POST https://wishlistfunctions.azurewebsites.net/api/wishlist
 content-type: application/json
 
 {
@@ -6,4 +6,4 @@ content-type: application/json
 }
 
 ###
-GET http://localhost:7258/api/wishlist/d07a8c2c-0708-44b7-a871-0a205c03bd2e
+GET http://wishlistfunctions.azurewebsites.net/api/wishlist/95172e29-7b31-4f1a-9bfe-0a0467793997
