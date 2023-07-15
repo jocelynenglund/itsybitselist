@@ -1,6 +1,4 @@
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
-using Moq;
 using static ItsyBIT.Utilities.EncodedIdentifierGenerator;
 
 namespace ItsyBIT.Utilities.Tests
@@ -15,8 +13,7 @@ namespace ItsyBIT.Utilities.Tests
         private EncodedIdentifierGenerator generator = null;
         public EncodedIdentifierTests()
         {
-            generator = new EncodedIdentifierGenerator(Mock.Of<IConfiguration>());
-            EncodedIdentifierGenerator.GetKey = () => key;
+            generator = new EncodedIdentifierGenerator(key);
         }
 
         [Fact]

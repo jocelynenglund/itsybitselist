@@ -13,7 +13,7 @@ namespace ItsyBitseList.Tests.Core.WishListAggregate.Wishlists.Commands
         public PromiseItemInWishlistTests()
         {
             _wishlistRepositoryMock = new();
-            _sut = new PromiseItemInWishlistHandler(_wishlistRepositoryMock.Object);
+            _sut = new PromiseItemInWishlistHandler(_wishlistRepositoryMock.Object, new ItsyBIT.Utilities.EncodedIdentifierGenerator("ItsyBitsecretKey"));
         }
 
         //[Fact]

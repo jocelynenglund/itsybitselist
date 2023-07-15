@@ -6,7 +6,6 @@ using ItsyBitseList.Core.WishlistCollectionAggregate;
 using ItsyBitseList.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace ItsyBitseList.Infrastructure.Persistence
 {
