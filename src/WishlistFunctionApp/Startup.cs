@@ -35,8 +35,8 @@ namespace WishlistFunctionApp
             var config =
                 new ConfigurationBuilder()
                     .SetBasePath(applicationRootPath)
-                    .AddJsonFile("local.settings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .AddEnvironmentVariables()
                     .Build();
 
