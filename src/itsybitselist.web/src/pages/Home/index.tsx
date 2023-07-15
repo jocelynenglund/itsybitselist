@@ -28,8 +28,10 @@ export const Home = () => {
       headers: headers,
       body: body,
     }).then((response) => {
+      console.log(response);
       const location = response.headers.get("Location");
       const guid = location?.substring(location.lastIndexOf("/") + 1);
+      console.log(location);
       navigate(`/wishlist/${guid}`);
     });
   };

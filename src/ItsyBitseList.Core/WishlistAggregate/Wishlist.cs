@@ -1,6 +1,5 @@
 ﻿using ItsyBitseList.Core.Interfaces;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
@@ -16,16 +15,16 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             Name = name;
             Owner = owner;
         }
-        [JsonInclude]
+        [JsonProperty]
         public Guid Id { get; init; }
-        [JsonInclude]
+        [JsonProperty]
         public string Name { get; init; }
-        [JsonInclude]
+        [JsonProperty]
         public string Owner { get; init; } = DefaultOwner;
         private List<WishlistItem> items = new();
 
         public void SetItems(List<WishlistItem> items) => this.items = items;
-        [JsonInclude]
+        [JsonProperty]
         public IReadOnlyCollection<WishlistItem> Items { get => items.AsReadOnly(); init => items = value.ToList(); }
 
         public static Wishlist CreateWith(Guid id, string name, string? owner = null)

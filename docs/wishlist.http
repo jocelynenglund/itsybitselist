@@ -1,0 +1,6 @@
+POST http://localhost:7258/api/wishlist
+content-type: application/json
+
+{
+    "name": "perr"
+}

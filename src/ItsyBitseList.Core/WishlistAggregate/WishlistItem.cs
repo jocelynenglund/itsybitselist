@@ -1,5 +1,5 @@
-﻿using ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
@@ -10,11 +10,11 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
         public string Description { get; }
         public Uri? Link { get; init; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public State State { get; private set; }
         public Guid WishlistId { get; set; }
 
-        [JsonInclude]
+        [JsonProperty]
         public Guid? PromiseGuid {  get; private set; }
         
         public WishlistItem(Guid id, Guid wishlistId, string description, Uri? link=null)
@@ -25,7 +25,7 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             WishlistId = wishlistId;
             Link = link;
         }
-        [JsonConstructor]
+        [JsonConstructorAttribute]
         public WishlistItem(Guid id, Guid wishlistId, string description, State state, Guid? promiseGuid, Uri? link=null) : this(id, wishlistId, description, link)
         {
             State = state;
