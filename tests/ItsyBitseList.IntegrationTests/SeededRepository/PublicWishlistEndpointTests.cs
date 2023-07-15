@@ -12,18 +12,18 @@ namespace ItsyBitseList.IntegrationTests.SeededRepository
         [Fact]
         public async Task CanPromiseItemsInExistingWishlist()
         {
-            var response = await _client.PatchAsync($"/wishlist/{InMemoryRepository.FirstId}/item/{InMemoryRepository.MovieCard}", new StringContent($"{{\"state\":\"{State.Promised}\"}}", Encoding.UTF8, "application/json"));
+            var response = await _client.PatchAsync($"/public/{InMemoryRepository.FirstId}/item/{InMemoryRepository.MovieCard}", new StringContent($"{{\"state\":\"{State.Promised}\"}}", Encoding.UTF8, "application/json"));
             response.EnsureSuccessStatusCode();
         }
 
         [Fact]
         public async Task CanRevertPromiseItemsInExistingWishlist()
         {
-            var response = await _client.PatchAsync($"/wishlist/{InMemoryRepository.FirstId}/item/{InMemoryRepository.MovieCard}", new StringContent($"{{\"state\":\"{State.Promised}\"}}", Encoding.UTF8, "application/json"));
+            var response = await _client.PatchAsync($"/public/{InMemoryRepository.FirstId}/item/{InMemoryRepository.MovieCard}", new StringContent($"{{\"state\":\"{State.Promised}\"}}", Encoding.UTF8, "application/json"));
             response.EnsureSuccessStatusCode();
             var promiseKey = await response.Content.ReadFromJsonAsync<Guid>();
 
-            var revertResponse = await _client.PatchAsync($"/wishlist/{InMemoryRepository.FirstId}/item/{InMemoryRepository.MovieCard}", new StringContent($"{{\"state\":\"{State.Wished}\", \"promiseKey\": \"{promiseKey}\"}}", Encoding.UTF8, "application/json"));
+            var revertResponse = await _client.PatchAsync($"/public/{InMemoryRepository.FirstId}/item/{InMemoryRepository.MovieCard}", new StringContent($"{{\"state\":\"{State.Wished}\", \"promiseKey\": \"{promiseKey}\"}}", Encoding.UTF8, "application/json"));
 
             revertResponse.EnsureSuccessStatusCode();
         }

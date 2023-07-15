@@ -1,3 +1,4 @@
+using ItsyBIT.Utilities;
 using ItsyBitseList.Core;
 using ItsyBitseList.Infrastructure;
 using ItsyBitseList.Infrastructure.Settings;
@@ -36,6 +37,7 @@ builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
 
 builder.Services.AddInfrastructureDependencies();
 builder.Services.AddCoreDependencies();
+builder.Services.AddEncodedIdentifierGenerator(builder.Configuration["EncodedIdentifierKey"]);
 
 //bind settings
 builder.Services.Configure<StorageSettings>(builder.Configuration.GetSection(nameof(StorageSettings)));

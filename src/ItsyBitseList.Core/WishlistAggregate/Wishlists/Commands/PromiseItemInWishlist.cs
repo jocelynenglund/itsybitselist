@@ -7,30 +7,25 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands
 {
     public class PromiseItemInWishlist
     {
-        public record class PromiseItemInWishlistCommand(Guid WishlistId, Guid ItemId) : IRequest<Guid>
-        {
-            public PromiseItemInWishlistCommand(string publicId, Guid itemId) :
-                this(
-                    Guid.TryParse(publicId, out var parsedId)
-                        ? parsedId
-                        : new EncodedIdentifier(publicId).Guid,
-                    itemId)
-            { }
-        };
+        public record class PromiseItemInWishlistCommand(string WishlistId, Guid ItemId) : IRequest<Guid>;
         public class PromiseItemInWishlistHandler : IRequestHandler<PromiseItemInWishlistCommand, Guid>
         {
             private readonly IAsyncRepository<Wishlist> _repository;
-            public PromiseItemInWishlistHandler(IAsyncRepository<Wishlist> repository)
+            private EncodedIdentifierGenerator _generator;
+            public PromiseItemInWishlistHandler(IAsyncRepository<Wishlist> repository, EncodedIdentifierGenerator generator)
             {
-
+                _generator = generator;
                 _repository = repository;
 
             }
             public async Task<Guid> Handle(PromiseItemInWishlistCommand request, CancellationToken cancellationToken)
             {
-                var wishlist = await _repository.GetByIdAsync(request.WishlistId);
+                var wishlistId = Guid.TryParse(request.WishlistId, out var parsedId)
+                ? parsedId
+                : _generator.Create(request.WishlistId).Guid;
+                var wishlist = await _repository.GetByIdAsync(wishlistId);
                 var toPromise = wishlist.Items.First(i => i.Id == request.ItemId);
-                if (toPromise.WishlistId != request.WishlistId)
+                if (toPromise.WishlistId != wishlistId)
                 {
                     throw new UnauthorizedAccessException("Item not found in wishlist");
                 }

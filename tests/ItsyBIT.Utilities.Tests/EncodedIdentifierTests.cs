@@ -1,5 +1,7 @@
 using FluentAssertions;
-using System.Text;
+using Microsoft.Extensions.Configuration;
+using Moq;
+using static ItsyBIT.Utilities.EncodedIdentifierGenerator;
 
 namespace ItsyBIT.Utilities.Tests
 {
@@ -10,14 +12,19 @@ namespace ItsyBIT.Utilities.Tests
         Guid Guid = System.Guid.Parse(GuidString);
         const string key = "testSecretKey145";
         const string toEncode = "HleUiCsPgkGZpHwxWPthrQ";
+        private EncodedIdentifierGenerator generator = null;
+        public EncodedIdentifierTests()
+        {
+            generator = new EncodedIdentifierGenerator(Mock.Of<IConfiguration>());
+            EncodedIdentifierGenerator.GetKey = () => key;
+        }
 
         [Fact]
         public void CanEncodeGuid()
         {
 
-            EncodedIdentifier.GetKey = () => key;
 
-            var encoded = new EncodedIdentifier(Guid);
+            var encoded = generator.Create(Guid);
 
             encoded.EncodedShortKey.Should().Be($"{shortGuid}");
 
@@ -25,9 +32,8 @@ namespace ItsyBIT.Utilities.Tests
         [Fact]
         public void CanDecodeGuid()
         {
-            EncodedIdentifier.GetKey = () => key;
 
-            var decoded = new EncodedIdentifier(shortGuid).Guid;
+            var decoded = generator.Create(shortGuid).Guid;
 
             decoded.Should().Be(Guid);
         }

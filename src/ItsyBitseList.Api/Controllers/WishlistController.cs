@@ -65,7 +65,7 @@ namespace ItsyBitseList.Api.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new GetWishlistQuery(id));
+                var result = await _mediator.Send(new GetWishlistQuery(id.ToString()));
 
                 return Ok(result);
             }
@@ -113,7 +113,7 @@ namespace ItsyBitseList.Api.Controllers
         {
             try
             {
-                var item = await _mediator.Send(new GetItemInWishlistQuery(id, itemId));
+                var item = await _mediator.Send(new GetItemInWishlistQuery(id.ToString(), itemId));
 
                 return Ok(item);
             }

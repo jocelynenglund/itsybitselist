@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using FluentAssertions;
-using ItsyBitseList.Core;
+﻿using FluentAssertions;
 using ItsyBitseList.Core.Interfaces.Persistence;
-using ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlists;
-using ItsyBitseList.Core.WishlistCollectionAggregate;
 using ItsyBitseList.Tests.Mocks;
 using Moq;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlists;
 
 namespace ItsyBitseList.Tests.Core.WishListAggregate.Wishlists.Queries
 {

@@ -9,29 +9,25 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishli
     public class GetItemInWishlist
     {
         public record ItemDetails(Guid Id, State State, string Description);
-        public record GetItemInWishlistQuery(Guid WishlistId, Guid ItemId) : IRequest<ItemDetails>
-        {
-            public GetItemInWishlistQuery(string publicId, Guid itemId) :
-                this(
-                    Guid.TryParse(publicId, out var parsedId)
-                        ? parsedId
-                        : new EncodedIdentifier(publicId).Guid,
-                    itemId)
-            { }
-        }
+        public record GetItemInWishlistQuery(string WishlistId, Guid ItemId) : IRequest<ItemDetails>;
 
         public class GetItemInWishlistHandler : IRequestHandler<GetItemInWishlistQuery, ItemDetails>
         {
             private readonly IAsyncRepository<Wishlist> _repository;
-            public GetItemInWishlistHandler(IAsyncRepository<Wishlist> repository)
+            EncodedIdentifierGenerator _generator;
+            public GetItemInWishlistHandler(IAsyncRepository<Wishlist> repository, EncodedIdentifierGenerator generator)
             {
                 _repository = repository;
+                _generator = generator;
             }
             public async Task<ItemDetails> Handle(GetItemInWishlistQuery request, CancellationToken cancellationToken)
             {
-                var result = (await _repository.GetByIdAsync(request.WishlistId)).Items.FirstOrDefault(i => i.Id == request.ItemId);
+                var wishlistId = Guid.TryParse(request.WishlistId, out var parsedId)
+                        ? parsedId
+                        : _generator.Create(request.WishlistId).Guid;
+                var result = (await _repository.GetByIdAsync(wishlistId)).Items.FirstOrDefault(i => i.Id == request.ItemId);
 
-                if (result == null || result.WishlistId != request.WishlistId)
+                if (result == null || result.WishlistId != wishlistId)
                 {
                     throw new InvalidOperationException(ErrorMessages.ItemNotFound);
                 }

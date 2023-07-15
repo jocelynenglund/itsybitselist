@@ -9,22 +9,22 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries
     {
         public record Item(Guid Id, State State, string Description, Uri? Link);
         public record WishListDetails(string Name, IEnumerable<Item> Items, string PublicId);
-        public record GetWishlistQuery(Guid Id) : IRequest<WishListDetails>
-        {
-            public GetWishlistQuery(string publicId) : this(Guid.TryParse(publicId, out var parsedId) ? parsedId : new EncodedIdentifier(publicId).Guid) { }
-        }
+        public record GetWishlistQuery(string Id) : IRequest<WishListDetails>;
         public class GetWishlistHandler : IRequestHandler<GetWishlistQuery, WishListDetails>
         {
             private readonly IAsyncRepository<Wishlist> _wishlistRepository;
+            private EncodedIdentifierGenerator _generator { get; }  
 
-            public GetWishlistHandler(IAsyncRepository<Wishlist> wishlistRepository)
+            public GetWishlistHandler(IAsyncRepository<Wishlist> wishlistRepository, EncodedIdentifierGenerator generator)
             {
                 _wishlistRepository = wishlistRepository;
+                this._generator = generator;
             }
             public async Task<WishListDetails> Handle(GetWishlistQuery request, CancellationToken cancellationToken)
             {
-                var publicId = new EncodedIdentifier(request.Id).EncodedShortKey;
-                return (await _wishlistRepository.GetByIdAsync(request.Id)).AsWishlistDetails(publicId);
+                var id =  Guid.TryParse(request.Id, out var parsedId) ? parsedId : _generator.Create(request.Id).Guid;
+                var publicId = _generator.Create(id).EncodedShortKey;
+                return (await _wishlistRepository.GetByIdAsync(id)).AsWishlistDetails(publicId);
             }
         }
     }
