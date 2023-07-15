@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using ItsyBitseList.Infrastructure.Persistence;
-using System.Net.Http.Json;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace ItsyBitseList.IntegrationTests.SeededRepository
@@ -56,7 +56,8 @@ namespace ItsyBitseList.IntegrationTests.SeededRepository
 
             var wishlistResponse = await _client.GetAsync(location);
             wishlistResponse.EnsureSuccessStatusCode(); // Status Code 200-299
-            var item = await wishlistResponse.Content.ReadFromJsonAsync<WishlistItem>();
+            var itemsString = await wishlistResponse.Content.ReadAsStringAsync();
+            var item = JsonConvert.DeserializeObject<WishlistItem>(itemsString);
             item.Description.Should().Be(itemName);
             item.State.Should().Be(State.Wished);
         }

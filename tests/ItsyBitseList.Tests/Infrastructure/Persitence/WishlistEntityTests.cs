@@ -1,11 +1,6 @@
 ﻿using ItsyBitseList.Core.WishlistCollectionAggregate;
 using ItsyBitseList.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ItsyBitseList.Tests.Infrastructure.Persitence
 {
@@ -26,7 +21,7 @@ namespace ItsyBitseList.Tests.Infrastructure.Persitence
             };
             var entity = new WishlistEntity(wishlist);
 
-            var parsedEntity = JsonSerializer.Deserialize<Wishlist>(entity.Wishlist);
+            var parsedEntity = JsonConvert.DeserializeObject<Wishlist>(entity.Wishlist);
             Assert.NotNull(parsedEntity);
         }
     }

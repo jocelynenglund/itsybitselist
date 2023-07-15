@@ -5,7 +5,7 @@ using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 using ItsyBitseList.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace ItsyBitseList.Infrastructure.Persistence
 {
@@ -14,7 +14,7 @@ namespace ItsyBitseList.Infrastructure.Persistence
 
         public static Wishlist AsDomainObject(this WishlistEntity entity)
         {
-            var result = JsonSerializer.Deserialize<Wishlist>(entity.Wishlist);
+            var result = JsonConvert.DeserializeObject<Wishlist>(entity.Wishlist);
             return result;
         }
     }
@@ -30,12 +30,12 @@ namespace ItsyBitseList.Infrastructure.Persistence
         {
             PartitionKey = wishlist.Owner;
             RowKey = wishlist.Id.ToString();
-            Wishlist = JsonSerializer.Serialize(wishlist);
+            Wishlist = JsonConvert.SerializeObject(wishlist);
         }
         public WishlistEntity() { }
         public WishlistEntity SetWishlist(Wishlist wishlist)
         {
-            Wishlist = JsonSerializer.Serialize(wishlist);
+            Wishlist = JsonConvert.SerializeObject(wishlist);
             return this;
         }
     }

@@ -1,0 +1,9 @@
+POST https://wishlistfunctions.azurewebsites.net/api/wishlist
+content-type: application/json
+
+{
+    "name": "perr"
+}
+
+###
+GET http://wishlistfunctions.azurewebsites.net/api/wishlist/95172e29-7b31-4f1a-9bfe-0a0467793997
