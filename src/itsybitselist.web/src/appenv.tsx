@@ -6,7 +6,7 @@ const appenv = {
     apiUrl: "https://itsybitsylist-api.azurewebsites.net",
   },
   production: {
-    apiUrl: "https://itsybitsylist-api.azurewebsites.net",
+    apiUrl: "https://wishlistfunctions.azurewebsites.net/api",
   },
 };
 
