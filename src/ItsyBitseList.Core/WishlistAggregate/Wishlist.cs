@@ -4,32 +4,37 @@ using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishl
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
+    public record WishlistState(Guid Id, string Name, string Owner, List<WishlistItemState> Items);
     // create a Wishlist class according to the tests
     public class Wishlist : IRootEntity
     {
+        public WishlistState DataState => new WishlistState(Id, Name, Owner, Items.Select(x => x.DataState).ToList());
         public static string DefaultOwner = "Anonymous";
-        public Wishlist() { } // required for Json deserialization
+        
         private Wishlist(Guid id, string name, string owner)
         {
             Id = id;
             Name = name;
             Owner = owner;
         }
-        [JsonProperty]
         public Guid Id { get; init; }
-        [JsonProperty]
         public string Name { get; init; }
-        [JsonProperty]
         public string Owner { get; init; } = DefaultOwner;
         private List<WishlistItem> items = new();
 
         public void SetItems(List<WishlistItem> items) => this.items = items;
-        [JsonProperty]
         public IReadOnlyCollection<WishlistItem> Items { get => items.AsReadOnly(); init => items = value.ToList(); }
 
         public static Wishlist CreateWith(Guid id, string name, string? owner = null)
         {
             return new Wishlist(id, name, owner ?? Guid.NewGuid().ToString());
+        }
+        public static Wishlist CreateWith(WishlistState state)
+        {
+            return new Wishlist(state.Id, state.Name, state.Owner)
+            {
+                items = state.Items.Select(x => WishlistItem.CreateWith(x)).ToList()
+            };
         }
 
         // a method to add items to the wishlist

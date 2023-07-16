@@ -1,23 +1,23 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Runtime.CompilerServices;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
 
+[assembly:InternalsVisibleTo("ItsyBitseList.IntegrationTests")]
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
+    public record WishlistItemState(Guid Id, Guid WishlistId, [JsonConverter(typeof(StringEnumConverter))] State State, Guid? PromiseGuid, string Description, Uri? Link);
     public record WishlistItem
     {
+        public WishlistItemState DataState => new WishlistItemState(Id, WishlistId, State, PromiseGuid, Description, Link);
         public Guid Id { get; init; }
         public string Description { get; }
         public Uri? Link { get; init; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
         public State State { get; private set; }
         public Guid WishlistId { get; set; }
-
-        [JsonProperty]
         public Guid? PromiseGuid {  get; private set; }
         
-        public WishlistItem(Guid id, Guid wishlistId, string description, Uri? link=null)
+        internal WishlistItem(Guid id, Guid wishlistId, string description, Uri? link=null)
         {
             Id = id;
             Description = description;
@@ -25,8 +25,7 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             WishlistId = wishlistId;
             Link = link;
         }
-        [JsonConstructorAttribute]
-        public WishlistItem(Guid id, Guid wishlistId, string description, State state, Guid? promiseGuid, Uri? link=null) : this(id, wishlistId, description, link)
+        private WishlistItem(Guid id, Guid wishlistId, string description, State state, Guid? promiseGuid, Uri? link=null) : this(id, wishlistId, description, link)
         {
             State = state;
             PromiseGuid = promiseGuid;
@@ -43,10 +42,6 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             State = State.Verified;
         }
 
-        internal static WishlistItem CreateWith(AddItemToWishlistCommand request)
-        {
-            return new WishlistItem(Guid.NewGuid(), request.WishlistId, request.ItemDetails);
-        }
 
         public void Revert(Guid id)
         {
@@ -57,6 +52,14 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             {
                 throw new InvalidOperationException("Cannot revert promise with mismatched id");
             }
+        }
+        internal static WishlistItem CreateWith(WishlistItemState x)
+        {
+            return new WishlistItem(x.Id, x.WishlistId, x.Description, x.State, x.PromiseGuid, x.Link);
+        }
+        internal static WishlistItem CreateWith(AddItemToWishlistCommand request)
+        {
+            return new WishlistItem(Guid.NewGuid(), request.WishlistId, request.ItemDetails);
         }
     }
 }

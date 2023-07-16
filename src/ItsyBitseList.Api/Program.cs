@@ -35,13 +35,10 @@ builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
            .AllowAnyHeader();
 }));
 
-builder.Services.AddInfrastructureDependencies();
 builder.Services.AddCoreDependencies();
 builder.Services.AddEncodedIdentifierGenerator(builder.Configuration["EncodedIdentifierKey"]);
 
-//bind settings
-builder.Services.Configure<StorageSettings>(builder.Configuration.GetSection(nameof(StorageSettings)));
-builder.Services.AddStorage();
+builder.Services.AddStorage(builder.Configuration.GetSection(nameof(StorageSettings)));
 
 
 var app = builder.Build();

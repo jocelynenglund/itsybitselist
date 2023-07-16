@@ -25,7 +25,8 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishli
                 var wishlistId = Guid.TryParse(request.WishlistId, out var parsedId)
                         ? parsedId
                         : _generator.Create(request.WishlistId).Guid;
-                var result = (await _repository.GetByIdAsync(wishlistId)).Items.FirstOrDefault(i => i.Id == request.ItemId);
+                var wishlist = await _repository.GetByIdAsync(wishlistId);
+                var result = wishlist.Items.FirstOrDefault(i => i.Id == request.ItemId);
 
                 if (result == null || result.WishlistId != wishlistId)
                 {

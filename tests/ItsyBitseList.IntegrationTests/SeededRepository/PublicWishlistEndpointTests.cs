@@ -1,5 +1,5 @@
 ﻿using ItsyBitseList.Core.WishlistCollectionAggregate;
-using ItsyBitseList.Infrastructure.Persistence;
+using ItsyBitseList.IntegrationTests.TestObjects;
 using System.Net.Http.Json;
 using System.Text;
 
