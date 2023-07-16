@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
 
 [assembly:InternalsVisibleTo("ItsyBitseList.IntegrationTests")]
+[assembly:InternalsVisibleTo("ItsyBitseList.Tests")]
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
     public record WishlistItemState(Guid Id, Guid WishlistId, [JsonConverter(typeof(StringEnumConverter))] State State, Guid? PromiseGuid, string Description, Uri? Link);
