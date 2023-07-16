@@ -18,7 +18,7 @@ using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWis
 namespace WishlistFunctionApp
 {
     public class PublicFunction
-    {
+    { 
         private readonly IMediator _mediator;
         public PublicFunction(IMediator mediator)
         {

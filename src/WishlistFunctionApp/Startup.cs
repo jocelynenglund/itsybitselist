@@ -20,9 +20,8 @@ namespace WishlistFunctionApp
             builder.Services.AddCoreDependencies();
             var key = configuration.GetSection("EncodedIdentifierKey").Value;
             builder.Services.AddEncodedIdentifierGenerator(key);
-            //bind settings
-            builder.Services.Configure<StorageSettings>(configuration.GetSection(nameof(StorageSettings)));
-            builder.Services.AddStorage();
+            builder.Services.AddStorage(builder.Configuration.GetSection(nameof(StorageSettings)));
+
             builder.Services.AddScoped<HttpContextAccessor>();
             builder.Services.AddMvcCore().AddNewtonsoftJson(x =>
             {
