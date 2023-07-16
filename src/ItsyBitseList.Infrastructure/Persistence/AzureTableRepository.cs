@@ -14,8 +14,9 @@ namespace ItsyBitseList.Infrastructure.Persistence
 
         public static Wishlist AsDomainObject(this WishlistEntity entity)
         {
-            var result = JsonConvert.DeserializeObject<Wishlist>(entity.Wishlist);
-            return result;
+            var result = JsonConvert.DeserializeObject<WishlistState>(entity.Wishlist);
+
+            return  Wishlist.CreateWith(result);
         }
     }
 
@@ -30,12 +31,12 @@ namespace ItsyBitseList.Infrastructure.Persistence
         {
             PartitionKey = wishlist.Owner;
             RowKey = wishlist.Id.ToString();
-            Wishlist = JsonConvert.SerializeObject(wishlist);
+            Wishlist = JsonConvert.SerializeObject(wishlist.DataState);
         }
         public WishlistEntity() { }
         public WishlistEntity SetWishlist(Wishlist wishlist)
         {
-            Wishlist = JsonConvert.SerializeObject(wishlist);
+            Wishlist = JsonConvert.SerializeObject(wishlist.DataState);
             return this;
         }
     }

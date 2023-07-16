@@ -1,6 +1,6 @@
 ﻿using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
-using ItsyBitseList.Infrastructure.Persistence;
+using ItsyBitseList.IntegrationTests.TestObjects;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

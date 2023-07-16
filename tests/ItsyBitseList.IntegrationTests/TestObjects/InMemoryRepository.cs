@@ -1,11 +1,11 @@
 ﻿using ItsyBitseList.Core.Interfaces.Persistence;
 using ItsyBitseList.Core.WishlistCollectionAggregate;
 
-namespace ItsyBitseList.Infrastructure.Persistence
+namespace ItsyBitseList.IntegrationTests.TestObjects
 {
     public class InMemoryRepository : IWishlistRepository, IAsyncRepository<Wishlist>
     {
-        
+
         public static Guid FirstId = Guid.Parse("f07223ff-ec05-4a86-90c6-81944377e71e");
         public static Guid SecondId = Guid.Parse("e1f39e36-2e0b-47ec-86f6-7ed53f9ce4c9");
         public static Guid MovieCard = Guid.Parse("f0307763-0e69-4e47-987a-353c1245e15d");
@@ -23,7 +23,7 @@ namespace ItsyBitseList.Infrastructure.Persistence
         {
             CreateWishlist("me", FirstId, "Birthday Wishlist");
             CreateWishlist("me", SecondId, "Christmas Wishlist");
-            wishlists.First(w=>w.Id == FirstId).SetItems(new List<WishlistItem>()
+            wishlists.First(w => w.Id == FirstId).SetItems(new List<WishlistItem>()
             {
                 new WishlistItem(MovieCard, FirstId, "Bio kort"),
                 new WishlistItem(BarbieDoll, FirstId, "Barbie Doll")

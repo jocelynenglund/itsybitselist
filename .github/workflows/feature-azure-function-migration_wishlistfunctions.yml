@@ -6,7 +6,9 @@ name: Build and deploy dotnet core app to Azure Function App - wishlistfunctions
 on:
   push:
     branches:
-      - feature/azure-function-migration
+      - main
+    paths:
+      - "src/WishlistFunctionApp/**"
   workflow_dispatch:
 
 env:
