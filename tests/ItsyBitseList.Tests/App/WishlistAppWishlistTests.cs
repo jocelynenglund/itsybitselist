@@ -192,7 +192,7 @@ namespace ItsyBitseList.Tests.App
         {
             MockMediator<Guid>(Guid.Parse(ID1));
 
-            var response = await _sut.RevertPromise(ID1, Guid.Parse(ID2));
+            var response = await _sut.RevertPromise(ID1, Guid.Parse(ID2), Guid.Parse(ID2));
 
             response.Should().BeOfType(typeof(Response<Guid>));
             response.Result.Should().Be(Guid.Parse(ID1));

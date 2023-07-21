@@ -37,7 +37,27 @@ jobs:
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
+  test:
+    runs-on: windows-latest
 
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+          include-prerelease: true
+
+      - name: Restore dependencies
+        working-directory: ./tests/ItsyBitseList.Api.Tests
+        run: dotnet restore
+
+      - name: Build and run tests
+        working-directory: ./tests/ItsyBitseList.Api.Tests
+        run: dotnet test
   deploy:
     runs-on: windows-latest
     needs: build
