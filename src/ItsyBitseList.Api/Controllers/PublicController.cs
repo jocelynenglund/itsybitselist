@@ -1,8 +1,6 @@
-﻿using ItsyBitseList.Api.Models;
-using MediatR;
+﻿using ItsyBitseList.App;
+using ItsyBitseList.Core.Interfaces.App;
 using Microsoft.AspNetCore.Mvc;
-using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInWishlist;
-using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.RevertPromiseItemInWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
@@ -12,10 +10,10 @@ namespace ItsyBitseList.Api.Controllers
     [Route("[controller]")]
     public class PublicController: ControllerBase
     {
-        private readonly IMediator _mediator;
-        public PublicController(IMediator mediator)
+        private readonly IWishlistApp _application;
+        public PublicController(IWishlistApp application)
         {
-            _mediator = mediator;
+            _application = application;
         }
 
         /// <summary>
@@ -27,29 +25,22 @@ namespace ItsyBitseList.Api.Controllers
         [ProducesResponseType(typeof(WishListDetails), 200)]
         public async Task<IActionResult> GetWishlist( [FromRoute] string id)
         {
-            try
-            { 
-                var result = await _mediator.Send(new GetWishlistQuery(id));
-
-                return Ok(result);
-            }
-            catch (InvalidOperationException)
-            {
-                return NotFound($"Wishlist with id {id} no longer exists");
-            }
+            var response = await _application.GetWishlist(id.ToString());
+            return response.AsActionResult();
         }
+
         [HttpPatch("/public/{id}/item/{itemId}", Name = "PromiseItemInWishlist")]
         public async Task<IActionResult> Patch([FromRoute] string id, [FromRoute] Guid itemId, [FromBody] PatchRequest request)
         {
             if (request.State == "Promised")
             {
-                var promised = await _mediator.Send(new PromiseItemInWishlistCommand(id, itemId));
-                return Ok(promised);
+                var response = await _application.PromiseItem(id, itemId);
+                return response.AsActionResult();
             }
             if (request.PromiseKey.HasValue)
             {
-                await _mediator.Send(new RevertPromiseItemInWishlistCommand(id, itemId, request.PromiseKey.Value));
-                return Ok(request.PromiseKey.Value);
+                var response = await _application.RevertPromise(id, itemId, request.PromiseKey.Value);
+                return response.AsActionResult();
             }
 
             return NoContent();
@@ -63,17 +54,9 @@ namespace ItsyBitseList.Api.Controllers
         [ProducesResponseType(typeof(ItemDetails), 200)]
         public async Task<IActionResult> GetItemInWishlist([FromHeader] string? owner, [FromRoute] string id, [FromRoute] Guid itemId)
         {
-            try
-            {
-                var item = await _mediator.Send(new GetItemInWishlistQuery(id, itemId));
+            var response = await _application.GetItemInWishlist(id, itemId);
 
-                return Ok(item);
-            }
-            catch (InvalidOperationException)
-            {
-                return NotFound();
-            }
-
+            return response.AsActionResult();
         }
     }
 }

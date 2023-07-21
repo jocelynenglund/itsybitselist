@@ -7,6 +7,7 @@ namespace ItsyBIT.Utilities
 
     public class EncodedIdentifierGenerator
     {
+        public const string EncoderKey = "EncodedIdentifierKey";
         private static string DefaultKey = "ItsyBITSecretKey";
         private static string? key = null;
         public static Func<string> GetKey = () => {

@@ -1,3 +1,4 @@
 # itsybitselist
 
-- [x] Adding a link to home page
+## [running integration tests](./tests/ItsyBitseList.IntegrationTests/readme.md)
+

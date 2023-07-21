@@ -13,9 +13,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ItsyBIT.Utilities\ItsyBIT.Utilities.csproj" />
-		<ProjectReference Include="..\ItsyBitseList.Core\ItsyBitseList.Core.csproj" />
-		<ProjectReference Include="..\ItsyBitseList.Infrastructure\ItsyBitseList.Infrastructure.csproj" />
+		<ProjectReference Include="..\ItsyBitseList.App\ItsyBitseList.App.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Models\" />
 	</ItemGroup>
 
 </Project>

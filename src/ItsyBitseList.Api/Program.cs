@@ -1,7 +1,4 @@
-using ItsyBIT.Utilities;
-using ItsyBitseList.Core;
-using ItsyBitseList.Infrastructure;
-using ItsyBitseList.Infrastructure.Settings;
+using ItsyBitseList.App;
 using Newtonsoft.Json.Converters;
 using System.Reflection;
 
@@ -35,11 +32,7 @@ builder.Services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
            .AllowAnyHeader();
 }));
 
-builder.Services.AddCoreDependencies();
-builder.Services.AddEncodedIdentifierGenerator(builder.Configuration["EncodedIdentifierKey"]);
-
-builder.Services.AddStorage(builder.Configuration.GetSection(nameof(StorageSettings)));
-
+builder.Services.AddApplicationDependencies(builder.Configuration);
 
 var app = builder.Build();
 

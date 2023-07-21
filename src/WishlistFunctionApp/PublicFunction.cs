@@ -1,28 +1,23 @@
-﻿using MediatR;
+﻿using ItsyBitseList.App;
+using ItsyBitseList.Core.Interfaces.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
-using System;
-using System.Threading.Tasks;
-using Azure.Core;
-using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInWishlist;
-using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.RevertPromiseItemInWishlist;
 using Newtonsoft.Json;
+using System;
 using System.IO;
-using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
+using System.Threading.Tasks;
 
 namespace WishlistFunctionApp
 {
     public class PublicFunction
-    { 
-        private readonly IMediator _mediator;
-        public PublicFunction(IMediator mediator)
+    {
+        private readonly IWishlistApp _application;
+        public PublicFunction(IWishlistApp application)
         {
-            _mediator = mediator;
+            _application = application;
         }
 
         [FunctionName("GetPublicWishlist")]
@@ -31,16 +26,8 @@ namespace WishlistFunctionApp
             HttpRequest req, string id, ILogger log)
         {
             log.LogInformation("GetItemById function requested.");
-            try
-            {
-                var result = await _mediator.Send(new GetWishlistQuery(id));
-
-                return new OkObjectResult(result);
-            }
-            catch (InvalidOperationException)
-            {
-                return new NotFoundObjectResult($"Wishlist with id {id} no longer exists");
-            }
+            var response = await _application.GetWishlist(id.ToString());
+            return response.AsActionResult();
         }
 
         public record PatchRequest(string State, Guid? PromiseKey);
@@ -56,13 +43,13 @@ namespace WishlistFunctionApp
 
             if (request.State == "Promised")
             {
-                var promised = await _mediator.Send(new PromiseItemInWishlistCommand(id, itemId));
-                return new OkObjectResult(promised);
+                var response = await _application.PromiseItem(id, itemId);
+                return response.AsActionResult();
             }
             if (request.PromiseKey.HasValue)
             {
-                await _mediator.Send(new RevertPromiseItemInWishlistCommand(id, itemId, request.PromiseKey.Value));
-                return new OkObjectResult(request.PromiseKey.Value);
+                var response = await _application.RevertPromise(id, itemId, request.PromiseKey.Value);
+                return response.AsActionResult();
             }
 
             return new NoContentResult();
@@ -75,16 +62,9 @@ namespace WishlistFunctionApp
             HttpRequest req, string id, Guid itemId, ILogger log)
         {
             log.LogInformation("GetItemInWishlist function requested.");
-            try
-            {
-                var item = await _mediator.Send(new GetItemInWishlistQuery(id, itemId));
+            var response = await _application.GetItemInWishlist(id, itemId);
 
-                return new OkObjectResult(item);
-            }
-            catch (InvalidOperationException)
-            {
-                return new NotFoundObjectResult("Item not found");
-            }
+            return response.AsActionResult();
         }
     }
 }
