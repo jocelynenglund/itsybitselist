@@ -1,4 +1,5 @@
 ﻿using ItsyBIT.Utilities;
+using ItsyBitseList.App;
 using ItsyBitseList.Core;
 using ItsyBitseList.Infrastructure;
 using ItsyBitseList.Infrastructure.Settings;
@@ -17,11 +18,7 @@ namespace WishlistFunctionApp
         {
             var configuration = BuildConfiguration(builder.GetContext().ApplicationRootPath);
 
-            builder.Services.AddCoreDependencies();
-            var key = configuration.GetSection("EncodedIdentifierKey").Value;
-            builder.Services.AddEncodedIdentifierGenerator(key);
-            builder.Services.AddStorage(configuration.GetSection(nameof(StorageSettings)));
-
+            builder.Services.AddApplicationDependencies(configuration);
             builder.Services.AddScoped<HttpContextAccessor>();
             builder.Services.AddMvcCore().AddNewtonsoftJson(x =>
             {

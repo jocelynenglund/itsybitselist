@@ -9,16 +9,16 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands
         public record DeleteItemInWishlistCommand(
             Guid WishlistId,
             Guid ItemId
-        ) : IRequest;
+        ) : IRequest<Unit>;
 
-        public class DeleteItemInWishlistHandler : IRequestHandler<DeleteItemInWishlistCommand>
+        public class DeleteItemInWishlistHandler : IRequestHandler<DeleteItemInWishlistCommand, Unit>
         {
             public IAsyncRepository<Wishlist> _repository;
             public DeleteItemInWishlistHandler(IAsyncRepository<Wishlist> repository)
             {
                 _repository = repository;
             }
-            public async Task Handle(DeleteItemInWishlistCommand request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(DeleteItemInWishlistCommand request, CancellationToken cancellationToken)
             {
                 var wishlist = await _repository.GetByIdAsync(request.WishlistId);
                 var itemToDelete = wishlist.Items.First(item => item.Id == request.ItemId);
@@ -28,6 +28,7 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands
                 }
                 wishlist.Remove(request.ItemId);
                 await _repository.UpdateAsync(wishlist);
+                return Unit.Value;
             }
 
         }

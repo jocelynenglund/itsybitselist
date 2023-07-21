@@ -10,6 +10,7 @@ namespace ItsyBitseList.Core.Constants
     {
         public const string WishlistNotFound = "Wishlist not found";
         public const string Unauthorized = "Unauthorized";
-        public const string ItemNotFound = "Item not found in wishlist";
+        public const string ItemNotFound = "Not found";
+        public const string UnexpectedError = "Unexpected error";
     }
 }
