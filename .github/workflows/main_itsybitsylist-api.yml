@@ -52,11 +52,11 @@ jobs:
           include-prerelease: true
 
       - name: Restore dependencies
-        working-directory: ./tests/ItsyBitseList.Api.Tests
+        working-directory: ./tests/ItsyBitseList.Tests
         run: dotnet restore
 
       - name: Build and run tests
-        working-directory: ./tests/ItsyBitseList.Api.Tests
+        working-directory: ./tests/ItsyBitseList.Tests
         run: dotnet test
   deploy:
     runs-on: windows-latest
