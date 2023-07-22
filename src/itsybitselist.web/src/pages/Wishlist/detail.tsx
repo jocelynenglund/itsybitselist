@@ -16,6 +16,7 @@ import { Item } from "./components/item";
 
 import appenv from "../../appenv";
 import { Url } from "url";
+import { WishlistDetails } from "./components/wishlistDetails";
 
 const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IItem {
@@ -28,6 +29,7 @@ interface IWishlistDetailView {
   name: string;
   items: IItem[];
   publicId?: string | undefined;
+  description?: string | undefined;
 }
 interface IFormInput {
   details: string;
@@ -142,6 +144,8 @@ export const Detail = () => {
         </Navbar>
       </div>
       <div className="wishlist">
+        <WishlistDetails description={wishlist.description} />
+        <hr />
         {wishlist.items.length === 0 && (
           <div className="empty">
             <h2>Your list is empty! Let's add something</h2>
