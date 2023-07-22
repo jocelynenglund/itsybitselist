@@ -4,6 +4,43 @@ content-type: application/json
 {
     "name": "perr"
 }
+###
+GET itsybitsylist-api.azurewebsites.net/api/wishlist/1c1ac2ba-e86e-43a6-ace4-820e9ed37cf5
+### debug this, why is it not found
+GET http://itsybitsylist-api.azurewebsites.net/api/public/Nxl5CiAEcjkaBXsFbDM/KyweflNREg==
 
 ###
-GET http://wishlistfunctions.azurewebsites.net/api/wishlist/95172e29-7b31-4f1a-9bfe-0a0467793997
+GET http://wishlistfunctions.azurewebsites.net/api/wishlist/1c1ac2ba-e86e-43a6-ace4-820e9ed37cf5
+### debug this, why is it not found
+GET http://wishlistfunctions.azurewebsites.net/api/public/Nxl5CiAEcjkaBXsFbDM/KyweflNREg==
+###
+POST http://localhost:7258/api/wishlist
+content-type: application/json
+
+{
+    "name": "perr"
+}
+
+###
+GET  http://localhost:7258/api/wishlist/423ae709-8853-4849-909b-db9608fc360e
+###
+GET http://localhost:7258/api/wishlist/1c1ac2ba-e86e-43a6-ace4-820e9ed37cf5
+### debug this, why is it not found
+GET http://localhost:7258/api/public/Nxl5CiAEcjkaBXsFbDM%2FKyweflNREg%3D%3D
+
+
+###
+GET http://localhost:7258/api/wishlist/1c1ac2ba-e86e-43a6-ace4-820e9ed37cf5
+### debug this, why is it not found
+GET http://localhost:7258/api/public/NzVZISQ2BDQwK1FCE08fFh0bBSJFNA==
+
+NzVZISQ2BDQwK1FCE08fFh0bBSJFNA==
+
+### why is the slash not decoded
+GET https://localhost:7137/public/YQAgMy0MBx5%2FJD0mCHtjbkAANzY1HQ%3D%3D
+
+
+### function app
+GET https://localhost:7258/api/public/YQAgMy0MBx5%2FJD0mCHtjbkAANzY1HQ%3D%3D
+
+

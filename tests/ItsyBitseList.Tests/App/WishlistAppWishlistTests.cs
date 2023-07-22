@@ -7,6 +7,7 @@ using ItsyBitseList.Core.WishlistCollectionAggregate;
 using MediatR;
 using Moq;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemInWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
@@ -190,12 +191,12 @@ namespace ItsyBitseList.Tests.App
         [Fact]
         public async Task ApplicationRevertPromise_ShouldReturnPromiseKey()
         {
-            MockMediator<Guid>(Guid.Parse(ID1));
+            MockMediator<Guid>(Guid.Parse(ID2));
 
-            var response = await _sut.RevertPromise(ID1, Guid.Parse(ID2), Guid.Parse(ID2));
+            var response = await _sut.RevertPromise(wishlistId:ID1, itemId:Guid.Parse(ID2), promiseKey:Guid.Parse(ID2));
 
             response.Should().BeOfType(typeof(Response<Guid>));
-            response.Result.Should().Be(Guid.Parse(ID1));
+            response.Result.Should().Be(Guid.Parse(ID2));
         }
 
         private ItemCreationRequest GetItemCreationRequest(string name, Uri url)

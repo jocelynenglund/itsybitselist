@@ -16,8 +16,8 @@ namespace ItsyBitseList.Core.Interfaces.App
     {
         Task<Response<Guid>> AddItemToWishlist(Guid id, ItemCreationRequest request);
         Task<Response<Guid>> CreateWishlist(WishlistCreationRequest request);
-        Task<Response<Unit>> DeleteWishlist( Guid id, string? owner = null);
-        Task <Response<Unit>> DeleteWishlistItem(Guid wishlistId, Guid itemId);
+        Task<Response<Unit>> DeleteWishlist(Guid id, string? owner = null);
+        Task<Response<Unit>> DeleteWishlistItem(Guid wishlistId, Guid itemId);
         Task<Response<ItemDetails>> GetItemInWishlist(string wishlistId, Guid itemId);
         Task<Response<WishListDetails>> GetWishlist(string id);
         Task<Response<Guid>> PromiseItem(string wishlistId, Guid itemId);

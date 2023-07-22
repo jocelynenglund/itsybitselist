@@ -1,5 +1,6 @@
 ﻿using ItsyBitseList.Core.Interfaces.App;
 using MediatR;
+using System.Net;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemInWishlist;
@@ -44,13 +45,16 @@ namespace ItsyBitseList.App
             }
         }
 
+        public record URLEncodedWishlistDetails(string Name, IEnumerable<Item> Items, string PublicId) : WishListDetails(Name, Items, PublicId);
+
         public async Task<Response<WishListDetails>> GetWishlist(string id)
         {
             try
             {
+                id = WebUtility.UrlDecode(id);
                 var result = await _mediator.Send(new GetWishlistQuery(id));
-
-                return new Response<WishListDetails>(result);
+                var encoded = new URLEncodedWishlistDetails(result.Name, result.Items, WebUtility.UrlEncode(result.PublicId));
+                return new Response<WishListDetails>(encoded);
             }
             catch (InvalidOperationException)
             {
@@ -64,7 +68,6 @@ namespace ItsyBitseList.App
 
         public async Task<Response<Guid>> AddItemToWishlist(Guid id, ItemCreationRequest request)
         {
-
             try
             {
                 var result = (await _mediator.Send(new AddItemToWishlistCommand(id, request.Details, request.Link)));
@@ -82,6 +85,7 @@ namespace ItsyBitseList.App
         {
             try
             {
+                wishlistId = WebUtility.UrlDecode(wishlistId);
                 var item = await _mediator.Send(new GetItemInWishlistQuery(wishlistId, itemId));
 
                 return new Response<ItemDetails>(item);
@@ -117,6 +121,7 @@ namespace ItsyBitseList.App
         {
             try
             {
+                wishlistId = WebUtility.UrlDecode(wishlistId);
                 var promised = await _mediator.Send(new PromiseItemInWishlistCommand(wishlistId, itemId));
                 return new Response<Guid>(promised);
             }
@@ -134,6 +139,7 @@ namespace ItsyBitseList.App
         {
             try
             {
+                wishlistId = WebUtility.UrlDecode(wishlistId);
                 await _mediator.Send(new RevertPromiseItemInWishlistCommand(wishlistId, itemId, promiseKey));
                 return new Response<Guid>(promiseKey);
             }

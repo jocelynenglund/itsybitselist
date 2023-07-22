@@ -25,7 +25,7 @@ namespace ItsyBitseList.Api.Controllers
         [ProducesResponseType(typeof(WishListDetails), 200)]
         public async Task<IActionResult> GetWishlist( [FromRoute] string id)
         {
-            var response = await _application.GetWishlist(id.ToString());
+            var response = await _application.GetWishlist(id);
             return response.AsActionResult();
         }
 
