@@ -6,6 +6,7 @@ import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
 import appenv from "../../appenv";
+import { WishlistDetails } from "./components/wishlistDetails";
 
 const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IItem {
@@ -16,6 +17,7 @@ interface IItem {
 interface IWishlistDetailView {
   name: string;
   items: IItem[];
+  description?: string | undefined;
 }
 interface PromiseKeys {
   [key: string]: string;
@@ -25,6 +27,7 @@ export const PublicDetail = () => {
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
     name: "",
     items: [],
+    description: undefined,
   });
 
   const { id } = useParams<{ id: string }>();
@@ -113,13 +116,13 @@ export const PublicDetail = () => {
           </Navbar.Collapse>
         </Navbar>
       </div>
+      <WishlistDetails description={wishlist.description} />
+      <hr />
       <div className="wishlist">
         {wishlist.items.length === 0 && (
           <h2>The list is still empty, check again later!</h2>
         )}
         {wishlist.items.map((item, idx) => {
-          console.log(promiseDictionary[item.id], "key is");
-
           return (
             <Item
               key={idx}

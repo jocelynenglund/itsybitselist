@@ -8,7 +8,8 @@ namespace ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands
     {
         public record CreateWishlistCommand(
             string Owner,
-            string WishlistName
+            string WishlistName,
+            string? Description = null
         ) : IRequest<Guid>;
 
         public class CreateWishlistHandler : IRequestHandler<CreateWishlistCommand, Guid>

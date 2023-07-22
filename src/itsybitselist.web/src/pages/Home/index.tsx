@@ -8,6 +8,7 @@ import appenv from "../../appenv";
 const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IFormInput {
   wishlistName: string;
+  description: string | undefined;
 }
 
 export const Home = () => {
@@ -21,8 +22,11 @@ export const Home = () => {
   const onSubmit = (data: IFormInput) => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
-    const body = JSON.stringify({ name: data.wishlistName });
-
+    const body = JSON.stringify({
+      name: data.wishlistName,
+      description: data.description,
+    });
+    console.log(body);
     fetch(`${apiUrl}/wishlist/`, {
       method: "POST",
       headers: headers,
@@ -49,6 +53,14 @@ export const Home = () => {
             {...register("wishlistName", { required: true })}
             className={styles.input}
           />
+          <Form.Control
+            as="textarea"
+            rows={3}
+            placeholder="Enter description"
+            {...register("description", { required: false })}
+            className={styles.input}
+          />
+
           {errors.wishlistName && (
             <span className={styles.error}>This field is required</span>
           )}

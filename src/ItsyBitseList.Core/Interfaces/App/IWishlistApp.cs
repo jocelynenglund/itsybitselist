@@ -4,7 +4,7 @@ using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
 namespace ItsyBitseList.Core.Interfaces.App
 {
-    public record WishlistCreationRequest(string? Owner, string Name);
+    public record WishlistCreationRequest(string? Owner, string Name, string? Description = null);
     public record ItemCreationRequest(string Details, Uri? Link);
     /// <summary>
     /// Patch request model for item promise

@@ -12,7 +12,7 @@ namespace ItsyBitseList.Api.Controllers
     {
         private readonly IWishlistApp _application;
 
-        public WishlistController( IWishlistApp application)
+        public WishlistController(IWishlistApp application)
         {
             _application = application;
         }
