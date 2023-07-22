@@ -32,7 +32,8 @@ export const PublicDetail = () => {
 
   const fetchWishlistDetails = useCallback(() => {
     const headers = new Headers();
-    fetch(`${apiUrl}/public/${id}`, {
+    if (id === undefined) return;
+    fetch(`${apiUrl}/public/${encodeURIComponent(id)}`, {
       headers: headers,
     })
       .then((response) => {
@@ -55,8 +56,8 @@ export const PublicDetail = () => {
     const body = promiseKey
       ? JSON.stringify({ promiseKey: promiseKey, state: "Wished" })
       : JSON.stringify({ state: "Promised" });
-
-    fetch(`${apiUrl}/public/${id}/item/${itemId}`, {
+    if (id === undefined) return;
+    fetch(`${apiUrl}/public/${encodeURIComponent(id)}/item/${itemId}`, {
       method: "PATCH",
       headers: headers,
       body: body,
@@ -71,7 +72,10 @@ export const PublicDetail = () => {
   };
 
   const handleShare = () => {
-    const shareUrl = `${window.location.origin}/wishlist/public/${id}`;
+    if (id === undefined) return;
+    const shareUrl = `${
+      window.location.origin
+    }/wishlist/public/${encodeURIComponent(id)}`;
     navigator.clipboard.writeText(shareUrl);
     setShowAlert(true);
     setTimeout(() => {
