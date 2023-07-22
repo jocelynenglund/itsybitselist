@@ -24,7 +24,7 @@ namespace ItsyBitseList.Tests.Api
         public async Task GetWishlistWithValidID_ReturnsOkResult()
         {
             var mockResult = new Fixture().Create<WishListDetails>();
-            _applicationMock.Setup(w => w.GetWishlist(It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(new Response<WishListDetails>(mockResult));
+            _applicationMock.Setup(w => w.GetWishlist(It.IsAny<string>())).ReturnsAsync(new Response<WishListDetails>(mockResult));
 
             var response = await _sut.GetWishlist(default, Guid.Parse("59fdc665-e3c3-4711-ba59-5de3f7071559"));
 
@@ -33,7 +33,7 @@ namespace ItsyBitseList.Tests.Api
         [Fact]
         public async Task GetWishlistWithInvalidID_ReturnsNotFoundResult()
         {
-            _applicationMock.Setup(w=>w.GetWishlist(It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(new Response<WishListDetails>(Status.NotFound, ErrorMessages.WishlistNotFound));
+            _applicationMock.Setup(w=>w.GetWishlist(It.IsAny<string>())).ReturnsAsync(new Response<WishListDetails>(Status.NotFound, ErrorMessages.WishlistNotFound));
 
             var response = await _sut.GetWishlist(default, Guid.Parse("59fdc665-e3c3-4711-ba59-5de3f7071559"));
 
@@ -42,7 +42,7 @@ namespace ItsyBitseList.Tests.Api
 
         [Fact]
         public async Task GetWishlistWithException_ReturnsInternalServerException() { 
-            _applicationMock.Setup(w=>w.GetWishlist(It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(new Response<WishListDetails>(Status.Error, ErrorMessages.UnexpectedError));
+            _applicationMock.Setup(w=>w.GetWishlist(It.IsAny<string>())).ReturnsAsync(new Response<WishListDetails>(Status.Error, ErrorMessages.UnexpectedError));
 
             var response = (StatusCodeResult) await _sut.GetWishlist(default, Guid.Parse("59fdc665-e3c3-4711-ba59-5de3f7071559"));
 

@@ -11,7 +11,8 @@ namespace ItsyBitseList.Core
             return new WishListDetails(
                 wishlist.Name, 
                 wishlist.Items.Select(x => new Item(x.Id, x.State, x.Description, x.Link)),
-                publicId
+                publicId,
+                wishlist.Description
                 );
         }
 

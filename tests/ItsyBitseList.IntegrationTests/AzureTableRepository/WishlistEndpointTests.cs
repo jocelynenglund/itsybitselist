@@ -8,18 +8,40 @@ namespace ItsyBitseList.IntegrationTests.AzureTableRepository
 {
     public class WishlistEndpointTests : TestBase
     {
+        private const string description = "description";
         public WishlistEndpointTests(WebApplicationFactory<Program> factory) : base(factory) { }
 
         [Fact]
         public async Task CanCreateAWishlistAndNavigateToIt()
         {
-            (var response, var location) = await CreateWishlist("{\"name\":\"My Wishlist\"}");
+
+            (var response, var location) = await CreateWishlist($"{{\"name\":\"My Wishlist\", \"description\":\"{description}\"}}");
             response.EnsureSuccessStatusCode();
             var wishlistResponse = await _client.GetAsync(location);
             WishListDetails? wishlist = await wishlistResponse.Parse<WishListDetails>();
 
             wishlistResponse.EnsureSuccessStatusCode(); // Status Code 200-299
             wishlist.PublicId.Should().NotBeNullOrEmpty();
+            wishlist.Description.Should().Be(description);
+
+            Cleanup();
+        }
+
+        [Theory]
+        [InlineData("description")]
+        [InlineData("<b> a description with html</b>")]
+        [InlineData(null)]
+        public async Task CanCreateAWishlistWithCustomDescriptionAndRetrieveIt(string description)
+        {
+
+            (var response, var location) = await CreateWishlist($"{{\"name\":\"My Wishlist\" {(description is null ? "}}" : $",\"description\":\"{description}\"}}")}");
+            response.EnsureSuccessStatusCode();
+            var wishlistResponse = await _client.GetAsync(location);
+            WishListDetails? wishlist = await wishlistResponse.Parse<WishListDetails>();
+
+            wishlistResponse.EnsureSuccessStatusCode(); // Status Code 200-299
+            wishlist.PublicId.Should().NotBeNullOrEmpty();
+            wishlist.Description.Should().Be(description);
 
             Cleanup();
         }

@@ -1,25 +1,26 @@
 ﻿using ItsyBitseList.Core.Interfaces;
-using Newtonsoft.Json;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishlist;
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
-    public record WishlistState(Guid Id, string Name, string Owner, List<WishlistItemState> Items);
+    public record WishlistState(Guid Id, string Name, string Owner, List<WishlistItemState> Items, string? Description);
     // create a Wishlist class according to the tests
     public class Wishlist : IRootEntity
     {
-        public WishlistState DataState => new WishlistState(Id, Name, Owner, Items.Select(x => x.DataState).ToList());
+        public WishlistState DataState => new WishlistState(Id, Name, Owner, Items.Select(x => x.DataState).ToList(), Description);
         public static string DefaultOwner = "Anonymous";
         
-        private Wishlist(Guid id, string name, string owner)
+        private Wishlist(Guid id, string name, string owner, string? description=null)
         {
             Id = id;
             Name = name;
             Owner = owner;
+            Description = description;
         }
         public Guid Id { get; init; }
         public string Name { get; init; }
         public string Owner { get; init; } = DefaultOwner;
+        public string? Description { get; set; }
         private List<WishlistItem> items = new();
 
         public void SetItems(List<WishlistItem> items) => this.items = items;
@@ -31,7 +32,7 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
         }
         public static Wishlist CreateWith(WishlistState state)
         {
-            return new Wishlist(state.Id, state.Name, state.Owner)
+            return new Wishlist(state.Id, state.Name, state.Owner, state.Description)
             {
                 items = state.Items.Select(x => WishlistItem.CreateWith(x)).ToList()
             };
@@ -51,7 +52,7 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
 
         internal static Wishlist CreateWith(CreateWishlistCommand request)
         {
-            return new Wishlist(Guid.NewGuid(), request.WishlistName, request.Owner ?? DefaultOwner);
+            return new Wishlist(Guid.NewGuid(), request.WishlistName, request.Owner ?? DefaultOwner, request.Description);
         }
     }
 }

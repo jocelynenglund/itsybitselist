@@ -23,7 +23,7 @@ namespace ItsyBitseList.App
 
         public async Task<Response<Guid>> CreateWishlist(WishlistCreationRequest request)
         {
-            var id = await _mediator.Send(new CreateWishlistCommand(request.Owner, request.Name));
+            var id = await _mediator.Send(new CreateWishlistCommand(request.Owner, request.Name, request.Description));
             return new Response<Guid>(id);
         }
 
@@ -45,7 +45,7 @@ namespace ItsyBitseList.App
             }
         }
 
-        public record URLEncodedWishlistDetails(string Name, IEnumerable<Item> Items, string PublicId) : WishListDetails(Name, Items, PublicId);
+        public record URLEncodedWishlistDetails(string Name, IEnumerable<Item> Items, string PublicId, string? Description) : WishListDetails(Name, Items, PublicId, Description );
 
         public async Task<Response<WishListDetails>> GetWishlist(string id)
         {
@@ -53,7 +53,7 @@ namespace ItsyBitseList.App
             {
                 id = WebUtility.UrlDecode(id);
                 var result = await _mediator.Send(new GetWishlistQuery(id));
-                var encoded = new URLEncodedWishlistDetails(result.Name, result.Items, WebUtility.UrlEncode(result.PublicId));
+                var encoded = new URLEncodedWishlistDetails(result.Name, result.Items, WebUtility.UrlEncode(result.PublicId), result.Description);
                 return new Response<WishListDetails>(encoded);
             }
             catch (InvalidOperationException)
