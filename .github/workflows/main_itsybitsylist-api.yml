@@ -60,7 +60,7 @@ jobs:
         run: dotnet test
   deploy:
     runs-on: windows-latest
-    needs: build
+    needs: test
     environment:
       name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
