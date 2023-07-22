@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using ItsyBitseList.IntegrationTests.TestObjects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
@@ -15,7 +16,7 @@ namespace ItsyBitseList.IntegrationTests.AzureTableRepository
             (var response, var location) = await CreateWishlist("{\"name\":\"My Wishlist\"}");
             response.EnsureSuccessStatusCode();
             var wishlistResponse = await _client.GetAsync(location);
-            WishListDetails? wishlist = await Parse<WishListDetails>(wishlistResponse);
+            WishListDetails? wishlist = await wishlistResponse.Parse<WishListDetails>();
 
             wishlistResponse.EnsureSuccessStatusCode(); // Status Code 200-299
             wishlist.PublicId.Should().NotBeNullOrEmpty();

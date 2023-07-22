@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace WishlistFunctionApp
@@ -26,7 +27,7 @@ namespace WishlistFunctionApp
             HttpRequest req, string id, ILogger log)
         {
             log.LogInformation("GetItemById function requested.");
-            var response = await _application.GetWishlist(id.ToString());
+            var response = await _application.GetWishlist(id);
             return response.AsActionResult();
         }
 

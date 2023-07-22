@@ -6,7 +6,7 @@ namespace ItsyBitseList.IntegrationTests.TestObjects
     public class InMemoryRepository : IWishlistRepository, IAsyncRepository<Wishlist>
     {
 
-        public static Guid FirstId = Guid.Parse("f07223ff-ec05-4a86-90c6-81944377e71e");
+        public static Guid FirstId = Guid.Parse("9dc2205a-2ff0-4ae4-a48f-5557be2485bf");
         public static Guid SecondId = Guid.Parse("e1f39e36-2e0b-47ec-86f6-7ed53f9ce4c9");
         public static Guid MovieCard = Guid.Parse("f0307763-0e69-4e47-987a-353c1245e15d");
         public static Guid BarbieDoll = Guid.Parse("ab00b86c-6534-4f9d-8268-866117333a37");

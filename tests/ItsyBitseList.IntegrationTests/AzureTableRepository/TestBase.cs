@@ -1,9 +1,7 @@
 ﻿using ItsyBitseList.Core.WishlistCollectionAggregate;
+using ItsyBitseList.IntegrationTests.TestObjects;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
@@ -39,26 +37,14 @@ namespace ItsyBitseList.IntegrationTests.AzureTableRepository
             string itemLocation = addItemResponse.Headers.Location.ToString();
             
             var itemResponse = await _client.GetAsync(itemLocation);
-            var item = await Parse<ItemDetails>(itemResponse);
+            var item = await itemResponse.Parse<ItemDetails>();
 
             var wishlistResponse = await _client.GetAsync(location);
             wishlistResponse.EnsureSuccessStatusCode(); // Status Code 200-299
-            WishListDetails? wishlist = await Parse<WishListDetails>(wishlistResponse);
+            WishListDetails? wishlist = await wishlistResponse.Parse<WishListDetails>();
 
             return (itemLocation, wishlist, item);
         }
-
-        protected static async Task<T> Parse<T>(HttpResponseMessage wishlistResponse)
-        {
-
-            var options = new JsonSerializerOptions
-            {
-                Converters = { new JsonStringEnumConverter(allowIntegerValues: true) },
-                PropertyNameCaseInsensitive = true
-            };
-            return await wishlistResponse.Content.ReadFromJsonAsync<T>(options);
-        }
-
 
         protected async Task<(HttpResponseMessage, string)> CreateWishlist(string content, bool skipCleanup = false)
         {
