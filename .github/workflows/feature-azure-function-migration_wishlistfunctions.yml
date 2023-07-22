@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - "src/WishlistFunctionApp/**"
+      - "src/ItsyBitseList*/"
   workflow_dispatch:
 
 env:

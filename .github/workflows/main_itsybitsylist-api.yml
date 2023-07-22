@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - "src/ItsyBitseList.Api/**"
+      - "src/ItsyBitseList*/"
   workflow_dispatch:
 
 jobs:
