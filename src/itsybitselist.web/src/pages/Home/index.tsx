@@ -4,37 +4,21 @@ import styles from "./index.module.css";
 import { useNavigate } from "react-router-dom";
 import headerImage from "../../assets/appheader.png";
 import appenv from "../../appenv";
+import { WishlistSettings } from "../../services/WishlistDetails";
+import { postWishlistDetails } from "../../services/WishlistService";
 
 const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
-interface IFormInput {
-  wishlistName: string;
-  description: string | undefined;
-}
-
 export const Home = () => {
   let navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<WishlistSettings>();
 
-  const onSubmit = (data: IFormInput) => {
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    const body = JSON.stringify({
-      name: data.wishlistName,
-      description: data.description,
-    });
-    console.log(body);
-    fetch(`${apiUrl}/wishlist/`, {
-      method: "POST",
-      headers: headers,
-      body: body,
-    }).then((response) => {
-      const location = response.headers.get("Location");
-      const guid = location?.substring(location.lastIndexOf("/") + 1);
-      navigate(`/wishlist/${guid}`);
+  const onSubmit = (data: WishlistSettings) => {
+    postWishlistDetails(data).then((created) => {
+      navigate(created.url);
     });
   };
   return (
@@ -50,7 +34,7 @@ export const Home = () => {
           <Form.Control
             type="text"
             placeholder="e.g. My Birthday Wishlist"
-            {...register("wishlistName", { required: true })}
+            {...register("name", { required: true })}
             className={styles.input}
           />
           <Form.Control
@@ -61,7 +45,7 @@ export const Home = () => {
             className={styles.input}
           />
 
-          {errors.wishlistName && (
+          {errors.name && (
             <span className={styles.error}>This field is required</span>
           )}
         </Form.Group>
