@@ -12,7 +12,6 @@ import {
   deleteItem,
   fetchWishlistDetails,
 } from "../../services/WishlistService";
-import { ItemDetails } from "../../services/ItemDetails";
 import { AddItemModal } from "./components/addItemModal";
 import { EditWishlistModal } from "./components/editWishlistModal";
 import { WishlistSettings } from "../../services/WishlistDetails";

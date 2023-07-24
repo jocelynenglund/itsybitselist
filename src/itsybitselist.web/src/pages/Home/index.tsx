@@ -3,11 +3,9 @@ import { Form, Button, Container } from "react-bootstrap";
 import styles from "./index.module.css";
 import { useNavigate } from "react-router-dom";
 import headerImage from "../../assets/appheader.png";
-import appenv from "../../appenv";
 import { WishlistSettings } from "../../services/WishlistDetails";
 import { postWishlistDetails } from "../../services/WishlistService";
 
-const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 export const Home = () => {
   let navigate = useNavigate();
   const {
