@@ -28,6 +28,10 @@
   padding: 1px 10px;
   margin-right: 10px;
 }
+.settingsButton {
+  padding: 1px 10px;
+  margin-right: 10px;
+}
 .shareAlert {
   position: fixed;
   top: 0;

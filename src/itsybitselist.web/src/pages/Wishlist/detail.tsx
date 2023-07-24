@@ -10,15 +10,20 @@ import {
   Nav,
   Alert,
 } from "react-bootstrap";
-import { faPlus, faShare } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faPlus, faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
 
 import appenv from "../../appenv";
 import { Url } from "url";
 import { WishlistDetails } from "./components/wishlistDetails";
+import {
+  ItemDetails,
+  deleteItem,
+  fetchWishlistDetails,
+  postWishlistItemDetails,
+} from "../../services/WishlistService";
 
-const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IItem {
   id: string;
   description: string;
@@ -31,10 +36,7 @@ interface IWishlistDetailView {
   publicId?: string | undefined;
   description?: string | undefined;
 }
-interface IFormInput {
-  details: string;
-  link: Url;
-}
+
 export const Detail = () => {
   const [wishlist, setWishlist] = useState<IWishlistDetailView>({
     name: "",
@@ -43,19 +45,15 @@ export const Detail = () => {
   });
 
   const { id, owner } = useParams<{ id: string; owner: string }>();
-  const { register, handleSubmit, reset } = useForm<IFormInput>();
+  const { register, handleSubmit, reset } = useForm<ItemDetails>();
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const fetchWishlistDetails = useCallback(() => {
-    const headers = new Headers();
-    fetch(`${apiUrl}/wishlist/${id}`, {
-      headers: headers,
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => setWishlist(data));
+  const fetchWishlist = useCallback(() => {
+    if (!id) {
+      return;
+    }
+    fetchWishlistDetails(id).then((data) => setWishlist(data));
   }, [id]);
 
   useEffect(() => {
@@ -63,37 +61,26 @@ export const Detail = () => {
   }, [id, wishlist.name]);
 
   useEffect(() => {
-    fetchWishlistDetails();
-  }, [fetchWishlistDetails]);
+    fetchWishlist();
+  }, [fetchWishlist]);
 
-  const onSubmit = (data: IFormInput) => {
-    const headers = new Headers();
-    headers.append("owner", owner!);
-    headers.append("Content-Type", "application/json");
-    const body = JSON.stringify({ details: data.details, link: data.link });
-
-    fetch(`${apiUrl}/wishlist/${id}/item`, {
-      method: "POST",
-      headers: headers,
-      body: body,
-    })
-      .then((response) => {})
-      .then((data) => {
-        reset();
-        fetchWishlistDetails();
-        setShowModal(false);
-      });
+  const onSubmit = (data: ItemDetails) => {
+    if (!id) {
+      return;
+    }
+    postWishlistItemDetails(id, data).then((data) => {
+      reset();
+      fetchWishlist();
+      setShowModal(false);
+    });
   };
 
-  const deleteItem = (itemId: string) => {
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("owner", owner!);
-    fetch(`${apiUrl}/wishlist/${id}/item/${itemId}`, {
-      method: "DELETE",
-      headers: headers,
-    }).then((data) => {
-      fetchWishlistDetails();
+  const handleDeleteItem = (itemId: string) => {
+    if (!id) {
+      return;
+    }
+    deleteItem(id, itemId).then((data) => {
+      fetchWishlist();
     });
   };
 
@@ -104,6 +91,9 @@ export const Detail = () => {
     setTimeout(() => {
       setShowAlert(false);
     }, 2000);
+  };
+  const handleSettings = () => {
+    alert("Not implemented yet");
   };
 
   return (
@@ -134,6 +124,13 @@ export const Detail = () => {
             <Nav>
               <Button
                 variant="outline-light"
+                className="settingsButton"
+                onClick={() => handleSettings()}
+              >
+                <FontAwesomeIcon icon={faCog} />
+              </Button>
+              <Button
+                variant="outline-light"
                 className="shareButton"
                 onClick={() => handleShare()}
               >
@@ -152,7 +149,12 @@ export const Detail = () => {
           </div>
         )}
         {wishlist.items.map((item, idx) => (
-          <Item key={idx} item={item} action="delete" callback={deleteItem} />
+          <Item
+            key={idx}
+            item={item}
+            action="delete"
+            callback={handleDeleteItem}
+          />
         ))}
       </div>
       <Modal show={showModal} onHide={() => setShowModal(false)}>

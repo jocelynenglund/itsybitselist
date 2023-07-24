@@ -5,10 +5,12 @@ import { Navbar, Button, Nav, Alert } from "react-bootstrap";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
-import appenv from "../../appenv";
 import { WishlistDetails } from "./components/wishlistDetails";
+import {
+  fetchWishlistDetails,
+  promiseItem,
+} from "../../services/WishlistService";
 
-const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 interface IItem {
   id: string;
   description: string;
@@ -33,45 +35,29 @@ export const PublicDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [showAlert, setShowAlert] = useState(false);
 
-  const fetchWishlistDetails = useCallback(() => {
-    const headers = new Headers();
-    if (id === undefined) return;
-    fetch(`${apiUrl}/public/${encodeURIComponent(id)}`, {
-      headers: headers,
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => setWishlist(data));
+  const fetchWishlist = useCallback(() => {
+    if (!id) {
+      return;
+    }
+    fetchWishlistDetails(encodeURIComponent(id)).then((data) =>
+      setWishlist(data)
+    );
   }, [id]);
 
   useEffect(() => {
-    fetchWishlistDetails();
-  }, [fetchWishlistDetails]);
+    fetchWishlist();
+  }, [fetchWishlist]);
 
   useEffect(() => {
     document.title = `ItsyBitsyList - ${wishlist.name}`;
   }, [id, wishlist.name]);
 
-  const promiseItem = (itemId: string, promiseKey?: string) => {
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    const body = promiseKey
-      ? JSON.stringify({ promiseKey: promiseKey, state: "Wished" })
-      : JSON.stringify({ state: "Promised" });
+  const handlePromiseItem = (itemId: string, promiseKey?: string) => {
     if (id === undefined) return;
-    fetch(`${apiUrl}/public/${encodeURIComponent(id)}/item/${itemId}`, {
-      method: "PATCH",
-      headers: headers,
-      body: body,
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        promiseDictionary[itemId] = data;
-        fetchWishlistDetails();
-      });
+    promiseItem(encodeURIComponent(id), itemId, promiseKey).then((data) => {
+      promiseDictionary[itemId] = data;
+      fetchWishlist();
+    });
   };
 
   const handleShare = () => {
@@ -127,7 +113,7 @@ export const PublicDetail = () => {
             <Item
               key={idx}
               item={item}
-              callback={promiseItem}
+              callback={handlePromiseItem}
               promiseKey={promiseDictionary[item.id]}
               action="promise"
             />
