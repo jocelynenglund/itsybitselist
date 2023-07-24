@@ -1,4 +1,6 @@
 import appenv from "../appenv";
+import { ItemDetails } from "./ItemDetails";
+import { WishlistSettings } from "./WishlistDetails";
 
 const apiUrl = appenv[process.env.NODE_ENV].apiUrl;
 
@@ -17,10 +19,44 @@ export const fetchPublicWishlistDetails = async (id: string) => {
   });
   return await response.json();
 };
-export interface ItemDetails {
-  details: string;
-  link: string;
+export interface CreatedWishlist {
+  id: string;
+  url: string;
 }
+
+export const postWishlistDetails = async (
+  details: WishlistSettings
+): Promise<CreatedWishlist> => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  const body = JSON.stringify(details);
+
+  const response = await fetch(`${apiUrl}/wishlist/`, {
+    method: "POST",
+    headers: headers,
+    body: body,
+  });
+  const location = response.headers.get("Location");
+  const id = location?.substring(location.lastIndexOf("/") + 1) ?? "";
+  const url = `/wishlist/${id}`;
+
+  return { id, url };
+};
+
+export const PatchWishlistDetails = async (
+  id: string,
+  details: WishlistSettings
+) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  const body = JSON.stringify(details);
+
+  await fetch(`${apiUrl}/wishlist/${id}`, {
+    method: "PATCH",
+    headers: headers,
+    body: body,
+  });
+};
 export const postWishlistItemDetails = async (
   id: string,
   item: ItemDetails
@@ -35,6 +71,7 @@ export const postWishlistItemDetails = async (
     body: body,
   });
 };
+
 export const promiseItem = async (
   id: string,
   itemId: string,

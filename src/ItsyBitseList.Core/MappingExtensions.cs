@@ -1,6 +1,7 @@
 ﻿using ItsyBitseList.Core.WishlistCollectionAggregate;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
+using static ItsyBitseList.Core.WishlistCollectionAggregate.Wishlist;
 
 namespace ItsyBitseList.Core
 {
@@ -12,6 +13,13 @@ namespace ItsyBitseList.Core
                 wishlist.Name, 
                 wishlist.Items.Select(x => new Item(x.Id, x.State, x.Description, x.Link)),
                 publicId,
+                wishlist.Description
+                );
+        }
+        public static WishlistSettings AsWishlistSettings(this Wishlist wishlist)
+        {
+            return new WishlistSettings(
+                wishlist.Name,
                 wishlist.Description
                 );
         }

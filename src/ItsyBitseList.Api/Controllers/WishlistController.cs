@@ -29,6 +29,17 @@ namespace ItsyBitseList.Api.Controllers
 
             return CreatedAtRoute("GetWishlist", new { id = response.Result }, null);
         }
+        /// <summary>
+        /// Updates a new Wishlist owned by the user
+        /// </summary>
+        /// <param name="wishlistName"></param>
+        [HttpPatch("/wishlist/{id}", Name = "UpdateWishlist")]
+        public async Task<IActionResult> UpdateWishlist([FromRoute] Guid id, [FromBody] WishlistUpdateRequest request)
+        {
+            var response = await _application.UpdateWishlist(id, request);
+
+            return response.AsActionResult();
+        }
 
         /// <summary>
         /// Retrieves a specific wishlist owned by the user

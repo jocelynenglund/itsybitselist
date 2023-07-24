@@ -1,28 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Form, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "./detail.css";
-import {
-  Navbar,
-  Button,
-  Modal,
-  FormControl,
-  Nav,
-  Alert,
-} from "react-bootstrap";
+import { Navbar, Button, Nav, Alert } from "react-bootstrap";
 import { faCog, faPlus, faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Item } from "./components/item";
 
-import appenv from "../../appenv";
 import { Url } from "url";
 import { WishlistDetails } from "./components/wishlistDetails";
 import {
-  ItemDetails,
   deleteItem,
   fetchWishlistDetails,
-  postWishlistItemDetails,
 } from "../../services/WishlistService";
+import { ItemDetails } from "../../services/ItemDetails";
+import { AddItemModal } from "./components/addItemModal";
+import { EditWishlistModal } from "./components/editWishlistModal";
+import { WishlistSettings } from "../../services/WishlistDetails";
 
 interface IItem {
   id: string;
@@ -44,9 +37,11 @@ export const Detail = () => {
     publicId: undefined,
   });
 
-  const { id, owner } = useParams<{ id: string; owner: string }>();
-  const { register, handleSubmit, reset } = useForm<ItemDetails>();
-  const [showModal, setShowModal] = useState(false);
+  const [settings, setSettings] = useState<WishlistSettings>();
+
+  const { id } = useParams<{ id: string }>();
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   const fetchWishlist = useCallback(() => {
@@ -55,7 +50,9 @@ export const Detail = () => {
     }
     fetchWishlistDetails(id).then((data) => setWishlist(data));
   }, [id]);
-
+  useEffect(() => {
+    setSettings({ name: wishlist.name, description: wishlist.description });
+  }, [wishlist]);
   useEffect(() => {
     document.title = `ItsyBitsyList - ${wishlist.name}`;
   }, [id, wishlist.name]);
@@ -63,17 +60,6 @@ export const Detail = () => {
   useEffect(() => {
     fetchWishlist();
   }, [fetchWishlist]);
-
-  const onSubmit = (data: ItemDetails) => {
-    if (!id) {
-      return;
-    }
-    postWishlistItemDetails(id, data).then((data) => {
-      reset();
-      fetchWishlist();
-      setShowModal(false);
-    });
-  };
 
   const handleDeleteItem = (itemId: string) => {
     if (!id) {
@@ -83,7 +69,11 @@ export const Detail = () => {
       fetchWishlist();
     });
   };
-
+  const handleHideModal = () => {
+    if (showAddModal) setShowAddModal(false);
+    else if (showEditModal) setShowEditModal(false);
+    fetchWishlist();
+  };
   const handleShare = () => {
     const shareUrl = `${window.location.origin}/wishlist/public/${wishlist.publicId}`;
     navigator.clipboard.writeText(shareUrl);
@@ -93,7 +83,7 @@ export const Detail = () => {
     }, 2000);
   };
   const handleSettings = () => {
-    alert("Not implemented yet");
+    setShowEditModal(true);
   };
 
   return (
@@ -114,7 +104,7 @@ export const Detail = () => {
           <Button
             variant="outline-light"
             className="addButton"
-            onClick={() => setShowModal(true)}
+            onClick={() => setShowAddModal(true)}
           >
             <FontAwesomeIcon icon={faPlus} />
           </Button>
@@ -157,36 +147,21 @@ export const Detail = () => {
           />
         ))}
       </div>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Item</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl
-              className="formControl"
-              {...register("details")}
-              placeholder="Description"
-            />
-            <FormControl
-              className="formControl"
-              {...register("link")}
-              placeholder="Link to item or store"
-            />
-
-            <Button
-              variant="secondary"
-              className="button"
-              onClick={() => setShowModal(false)}
-            >
-              Close
-            </Button>
-            <Button type="submit" variant="primary" className="button">
-              Add Item
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      {id && (
+        <AddItemModal
+          id={id}
+          show={showAddModal}
+          onHide={() => handleHideModal()}
+        />
+      )}
+      {id && (
+        <EditWishlistModal
+          id={id}
+          show={showEditModal}
+          onHide={() => handleHideModal()}
+          data={settings}
+        />
+      )}
       <footer>
         <b>
           Create a new wishlist <a href="/">here</a>. <br />

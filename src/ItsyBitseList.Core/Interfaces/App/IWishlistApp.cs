@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
-
+using ItsyBitseList.Core.WishlistCollectionAggregate;
 namespace ItsyBitseList.Core.Interfaces.App
 {
     public record WishlistCreationRequest(string? Owner, string Name, string? Description = null);
+    public record WishlistUpdateRequest(string Name, string? Description = null);
     public record ItemCreationRequest(string Details, Uri? Link);
     /// <summary>
     /// Patch request model for item promise
@@ -22,5 +23,6 @@ namespace ItsyBitseList.Core.Interfaces.App
         Task<Response<WishListDetails>> GetWishlist(string id);
         Task<Response<Guid>> PromiseItem(string wishlistId, Guid itemId);
         Task<Response<Guid>> RevertPromise(string wishlistId, Guid itemId, Guid promiseKey);
+        Task<Response<WishlistSettings>> UpdateWishlist(Guid id, WishlistUpdateRequest request);
     }
 }

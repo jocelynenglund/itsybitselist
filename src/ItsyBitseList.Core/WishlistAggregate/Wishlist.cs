@@ -3,6 +3,7 @@ using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.CreateWishl
 
 namespace ItsyBitseList.Core.WishlistCollectionAggregate
 {
+    public record WishlistSettings(string Name, string? Description);
     public record WishlistState(Guid Id, string Name, string Owner, List<WishlistItemState> Items, string? Description);
     // create a Wishlist class according to the tests
     public class Wishlist : IRootEntity
@@ -18,9 +19,9 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
             Description = description;
         }
         public Guid Id { get; init; }
-        public string Name { get; init; }
+        public string Name { get; private set; }
         public string Owner { get; init; } = DefaultOwner;
-        public string? Description { get; set; }
+        public string? Description { get; private set; }
         private List<WishlistItem> items = new();
 
         public void SetItems(List<WishlistItem> items) => this.items = items;
@@ -53,6 +54,13 @@ namespace ItsyBitseList.Core.WishlistCollectionAggregate
         internal static Wishlist CreateWith(CreateWishlistCommand request)
         {
             return new Wishlist(Guid.NewGuid(), request.WishlistName, request.Owner ?? DefaultOwner, request.Description);
+        }
+
+        internal void UpdateSettings(WishlistSettings settings)
+        {
+            Name = settings.Name;
+            Description = settings.Description;
+
         }
     }
 }

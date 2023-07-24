@@ -1,4 +1,5 @@
 ﻿using ItsyBitseList.Core.Interfaces.App;
+using ItsyBitseList.Core.WishlistCollectionAggregate;
 using MediatR;
 using System.Net;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.AddItemToWishlist;
@@ -7,6 +8,7 @@ using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteItemI
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.DeleteWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.PromiseItemInWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.RevertPromiseItemInWishlist;
+using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Commands.UpdateWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetItemInWishlist.GetItemInWishlist;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
@@ -150,6 +152,20 @@ namespace ItsyBitseList.App
             catch (Exception)
             {
                 return new UnexpectedErrorResponse<Guid>();
+            }
+        }
+
+        public async Task<Response<WishlistSettings>> UpdateWishlist(Guid id, WishlistUpdateRequest request)
+        {
+            try
+            {
+                var result = await _mediator.Send(new UpdateWishlistCommand(id, new WishlistSettings(request.Name, request.Description)));
+
+                return new Response<WishlistSettings>(result);
+            }
+            catch (Exception)
+            {
+                return new UnexpectedErrorResponse<WishlistSettings>();
             }
         }
     }

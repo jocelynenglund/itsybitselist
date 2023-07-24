@@ -44,6 +44,18 @@ namespace WishlistFunctionApp
             return new CreatedResult($"/wishlist/{response.Result}", response.Result);
         }
 
+        [FunctionName("UpdateWishlist")]
+        public async Task<IActionResult> Patch([HttpTrigger(AuthorizationLevel.Anonymous, "patch", Route = "wishlist/{id}")] HttpRequest req, Guid id, ILogger log)
+        {
+            log.LogInformation("UpdateWishlist function requested.");
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var request = JsonConvert.DeserializeObject<WishlistUpdateRequest>(requestBody);
+            var response = await _application.UpdateWishlist(id, request);
+
+            _httpContext.Response.Headers.Add("Access-Control-Expose-Headers", "*");
+
+            return response.AsActionResult();
+        }
         [FunctionName("AddItemToWishlist")]
         public async Task<IActionResult> Post([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "wishlist/{id}/item")] HttpRequest req, Guid id, ILogger log)
         {

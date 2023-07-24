@@ -2,6 +2,7 @@
 using ItsyBitseList.IntegrationTests.TestObjects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
+using System.Text;
 using static ItsyBitseList.Core.WishlistAggregate.Wishlists.Queries.GetWishlist;
 
 namespace ItsyBitseList.IntegrationTests.AzureTableRepository
@@ -44,6 +45,23 @@ namespace ItsyBitseList.IntegrationTests.AzureTableRepository
             wishlist.Description.Should().Be(description);
 
             Cleanup();
+        }
+
+        [Fact]
+        public async Task CanCreateWishlistAndUpdateDetails()
+        {
+            var description = "original";
+            var expectedDescription = "updated";
+            (var response, var location) = await CreateWishlist($"{{\"name\":\"My Wishlist\" {(description is null ? "}}" : $",\"description\":\"{description}\"}}")}");
+            var wishlistResponse = await _client.GetAsync(location);
+            WishListDetails? wishlist = await wishlistResponse.Parse<WishListDetails>();
+            var firstDescription = wishlist.Description;
+            var patchResponse = await _client.PatchAsync(location, new StringContent($"{{\"name\":\"My Wishlist\",\"description\":\"{expectedDescription}\"}}", Encoding.UTF8, "application/json"));
+            WishListDetails? updatedWishlist = await (await _client.GetAsync(location)).Parse<WishListDetails>();
+
+            patchResponse.EnsureSuccessStatusCode();
+            updatedWishlist.Description.Should().Be(expectedDescription);    
+
         }
 
         [Fact]
