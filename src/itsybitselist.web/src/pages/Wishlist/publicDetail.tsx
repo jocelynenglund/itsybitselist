@@ -10,6 +10,7 @@ import {
   fetchWishlistDetails,
   promiseItem,
 } from "../../services/WishlistService";
+import Loader, { ThreeDots } from "react-loader-spinner";
 
 interface IItem {
   id: string;
@@ -34,13 +35,15 @@ export const PublicDetail = () => {
 
   const { id } = useParams<{ id: string }>();
   const [showAlert, setShowAlert] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const fetchWishlist = useCallback(() => {
     if (!id) {
       return;
     }
-    fetchWishlistDetails(encodeURIComponent(id)).then((data) =>
+    fetchWishlistDetails(encodeURIComponent(id)).then((data) => {
       setWishlist(data)
+      setIsLoading(false)
+    }
     );
   }, [id]);
 
@@ -74,6 +77,19 @@ export const PublicDetail = () => {
 
   return (
     <div className="container">
+      {isLoading && (
+        <div className="loader-container">
+          <ThreeDots 
+height="80" 
+width="80" 
+radius="9"
+color="#942323" 
+ariaLabel="three-dots-loading"
+wrapperStyle={{}}
+visible={true}
+ />
+        </div>
+      )}
       {showAlert && (
         <Alert
           variant="success"
