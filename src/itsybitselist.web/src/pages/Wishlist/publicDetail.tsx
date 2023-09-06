@@ -121,7 +121,7 @@ visible={true}
       <WishlistDetails description={wishlist.description} />
       <hr />
       <div className="wishlist">
-        {wishlist.items.length === 0 && (
+        {wishlist.items.length === 0 && !isLoading && (
           <h2>The list is still empty, check again later!</h2>
         )}
         {wishlist.items.map((item, idx) => {
