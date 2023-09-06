@@ -10,7 +10,7 @@ import {
   fetchWishlistDetails,
   promiseItem,
 } from "../../services/WishlistService";
-import Loader, { ThreeDots } from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 
 interface IItem {
   id: string;
